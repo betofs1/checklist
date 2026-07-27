@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FarmaPrática | Checklist de Rotina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #16171c;
+    --panel: #1d1f26;
+    --sidebar: #1a1b21;
+    --card: #23252d;
+    --card-hover: #2b2d36;
+    --border: #34363f;
+    --red-dark: #b4192a;
+    --red: #b4192a;
+    --red-bright: #ef2d40;
+    --red-glow: rgba(239,45,64,0.18);
+    --text: #f4f5f7;
+    --text-dim: #9799a3;
+    --text-gray: #c7c9d1;
+    --amber: #f2b84b;
+    --pill-bg: #33232a;
+    --pill-text: #f6cf74;
+    --green: #35b56a;
+    --sidebar-w: 300px;
+    --hover-tint: rgba(255,255,255,.06);
+  }
+
+  /* ---------- Tema claro ---------- */
+  body.light{
+    --bg: #eae7e5;
+    --panel: #f7f5f4;
+    --sidebar: #ffffff;
+    --card: #ffffff;
+    --card-hover: #faf2f2;
+    --border: #dcd7d5;
+    --red-dark: #a10f1f;
+    --red: #a10f1f;
+    --red-bright: #d4152a;
+    --red-glow: rgba(212,21,42,0.12);
+    --text: #1a1a1a;
+    --text-dim: #7a7a80;
+    --text-gray: #5c5c62;
+    --amber: #b8790a;
+    --pill-bg: #fbe9ea;
+    --pill-text: #a10f1f;
+    --green: #1f8a4c;
+    --hover-tint: rgba(0,0,0,.04);
+  }
+  body.light .cat-item:hover{ color:#000; }
+  body.light .empty-icon{ background: linear-gradient(135deg, rgba(161,15,31,.12), rgba(232,184,75,.12)); }
+  body.light .valor-pill{ background: linear-gradient(135deg, #fdf0d8, var(--pill-bg)); border-color: rgba(161,15,31,.25); }
+  body.light .resumo-bar{ background: linear-gradient(135deg, rgba(161,15,31,.06), rgba(232,184,75,.05)); }
+  body.light .theme-toggle .icon-sun{ display:none; }
+  body.light .theme-toggle .icon-moon{ display:block; }
+  body.light{ background: var(--bg) !important; }
+  *{ box-sizing: border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:
+      radial-gradient(900px 500px at 15% -10%, rgba(239,45,64,.07), transparent 60%),
+      radial-gradient(700px 500px at 100% 0%, rgba(242,184,75,.04), transparent 55%),
+      var(--bg);
+    color: var(--text);
+    display:flex;
+    flex-direction: column;
+    height:100vh;
+    overflow:hidden;
+    transition: background-color .2s ease, color .2s ease;
+  }
+
+  /* ---------- Topbar ---------- */
+  .topbar-app{
+    display:grid;
+    grid-template-columns: var(--sidebar-w) 1fr;
+    align-items:center;
+    min-height: 64px;
+    flex-shrink:0;
+    padding: 10px 24px 10px 0;
+    background: var(--sidebar);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    box-shadow: 0 2px 20px rgba(0,0,0,.15);
+    z-index: 3;
+  }
+  .theme-toggle{
+    position:absolute;
+    right:24px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:38px;
+    height:38px;
+    border-radius:9px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:var(--text);
+    cursor:pointer;
+    transition: background-color .15s ease, border-color .15s ease;
+  }
+  .theme-toggle:hover{ background: var(--hover-tint); }
+  .theme-toggle svg{ width:18px; height:18px; }
+  .theme-toggle .icon-moon{ display:none; }
+  @media (max-width: 800px){ .theme-toggle{ right:14px; } }
+  .topbar-app .logo-wrap{
+    grid-column:1;
+    display:flex;
+    align-items:center;
+    padding-left: 24px;
+  }
+  .topbar-app .logo-wrap a{
+    display:flex;
+    align-items:center;
+    text-decoration:none;
+    color:inherit;
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand img{ width:40px; height:40px; }
+  .brand-text h1{
+    font-size:19px;
+    font-weight:800;
+    letter-spacing:-0.3px;
+    line-height:1.1;
+    margin:0;
+    color: var(--text);
+  }
+  .brand-text h1 span{ color:var(--red-bright); }
+  .brand-text p{
+    font-size:11.5px;
+    color:var(--text-gray);
+    font-weight:400;
+    margin:2px 0 0;
+  }
+  .topbar-app .titulo-central{
+    grid-column:2;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .topbar-app .titulo-principal{
+    font-size: 1.1rem;
+    font-weight:800;
+    white-space:nowrap;
+    letter-spacing:.6px;
+  }
+  .topbar-app .titulo-descricao{
+    font-size: .74rem;
+    color: var(--text-dim);
+    margin-top:2px;
+    white-space:nowrap;
+  }
+  @media (max-width: 800px){
+    .topbar-app{ grid-template-columns: 1fr; padding: 8px 14px; }
+    .topbar-app .logo-wrap{ padding-left:0; justify-content:center; margin-bottom:6px; }
+    .topbar-app .titulo-central{ grid-column:1; }
+  }
+
+  .app-body{ display:flex; flex:1; min-height:0; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width: var(--sidebar-w);
+    flex-shrink:0;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    box-shadow: 4px 0 24px rgba(0,0,0,.15);
+    z-index: 2;
+  }
+  .sidebar-header{ padding: 16px 18px 12px; }
+  .search-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background: var(--panel);
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding: 8px 10px;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .search-box:focus-within{ border-color: var(--red-bright); box-shadow: 0 0 0 3px var(--red-glow); }
+  .search-box input{
+    background:transparent; border:none; outline:none;
+    color:var(--text); font-size:.85rem; width:100%;
+  }
+  .sidebar-list{ flex:1; overflow-y:auto; padding: 4px 10px 20px; }
+  .cat-header{
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.9px;
+    color: var(--amber);
+    font-weight:800;
+    margin: 18px 4px 8px;
+    padding: 4px 0 6px 8px;
+    border-left: 3px solid var(--red-bright);
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-header:first-child{ margin-top: 2px; }
+  .cat-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    color: var(--text-gray);
+    font-size:.86rem;
+    padding: 8px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    margin-bottom: 2px;
+  }
+  .cat-item .cat-item-label{ display:flex; align-items:center; gap:9px; overflow:hidden; }
+  .cat-item .cat-item-label span.txt{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cat-item .cat-count{
+    font-size:.68rem;
+    font-weight:700;
+    color: var(--text-dim);
+    background: var(--panel);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:1px 7px;
+    flex-shrink:0;
+  }
+  .cat-item:hover{ background: var(--hover-tint); color:#fff; }
+  .cat-item.active{
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color:#fff;
+    font-weight:600;
+  }
+  .cat-item.active .cat-count{ background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.3); color:#fff; }
+  .cat-item.nc-item{ color: var(--pill-text); }
+  .cat-item.nc-item .cat-count{ background: rgba(239,45,64,.15); border-color: rgba(239,45,64,.3); color: var(--red-bright); }
+  .cat-item.dash-item{ font-weight:700; color: var(--text); }
+
+  /* ---------- Main ---------- */
+  .main{ flex:1; display:flex; justify-content:center; padding: 26px 40px 60px; overflow-y:auto; height:100%; }
+  .main-inner{ width:100%; max-width: 860px; }
+  .main-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 16px;
+    flex-wrap:wrap;
+  }
+  .main-header h2{ margin:0; font-size: 1.6rem; letter-spacing:-.2px; display:flex; align-items:center; gap:10px; }
+  .main-header .tags-row{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .cat-tag{
+    display:inline-block;
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    font-weight:800;
+    color: var(--amber);
+    background: rgba(232,184,75,.08);
+    border: 1px solid rgba(232,184,75,.3);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .status-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+    font-weight:800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border:1px solid var(--border);
+  }
+  .status-chip.ok{ color: var(--green); background: rgba(53,181,106,.1); border-color: rgba(53,181,106,.3); }
+  .status-chip.atencao{ color: var(--amber); background: rgba(242,184,75,.1); border-color: rgba(242,184,75,.3); }
+  .status-chip.critico{ color: var(--red-bright); background: rgba(239,45,64,.1); border-color: rgba(239,45,64,.3); }
+
+  .btn-ghost{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    border: 1px solid var(--border);
+    color: var(--text-gray);
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size:.78rem;
+    font-weight:700;
+    cursor:pointer;
+    white-space:nowrap;
+    transition: background .15s, transform .1s, border-color .15s;
+  }
+  .btn-ghost:hover{ background: var(--hover-tint); border-color: var(--red-bright); color: var(--red-bright); transform: translateY(-1px); }
+
+  /* ---------- Barra de progresso ---------- */
+  .resumo-bar{
+    background: linear-gradient(135deg, rgba(180,25,42,.1), rgba(232,184,75,.05));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 22px;
+    margin-bottom: 26px;
+  }
+  .resumo-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:12px; flex-wrap:wrap; }
+  .resumo-top .resumo-info{ font-size:.82rem; color: var(--text-gray); }
+  .resumo-top .resumo-info b{ color: var(--text); font-size:1rem; }
+  .progress-track{
+    width:100%;
+    height:10px;
+    background: var(--panel);
+    border:1px solid var(--border);
+    border-radius:20px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background: linear-gradient(90deg, var(--red-dark), var(--red-bright));
+    border-radius:20px;
+    transition: width .3s ease;
+  }
+  .progress-fill.full{ background: linear-gradient(90deg, #1f8a4c, var(--green)); }
+
+  /* ---------- Itens do checklist ---------- */
+  .itens-grid{ display:flex; flex-direction:column; gap: 12px; }
+  .item-card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.14);
+    transition: background-color .2s ease, border-color .2s ease;
+  }
+  .item-card.checked{ opacity:.6; }
+  .item-main{ display:flex; align-items:flex-start; gap:12px; cursor:pointer; }
+  .item-check{
+    flex-shrink:0;
+    width:22px; height:22px;
+    border-radius:6px;
+    border: 2px solid var(--border);
+    margin-top:1px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:.75rem;
+    color:#fff;
+    transition: background .15s, border-color .15s;
+  }
+  .item-card.checked .item-check{ background: linear-gradient(135deg, var(--red-dark), var(--red-bright)); border-color: var(--red-bright); }
+  .item-texto{ flex:1; font-size:.9rem; line-height:1.4; color: var(--text); }
+  .item-card.checked .item-texto{ text-decoration: line-through; color: var(--text-dim); }
+  .crit-dot{ flex-shrink:0; font-size:.7rem; margin-top:3px; }
+  .chevron{ flex-shrink:0; color: var(--text-dim); font-size:.7rem; margin-top:3px; transition: transform .15s; user-select:none; }
+  .item-card.aberto .chevron{ transform: rotate(90deg); }
+  .item-detail{
+    display:none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .item-card.aberto .item-detail{ display:block; }
+  .item-detail .linha{ display:flex; gap:8px; font-size:.8rem; line-height:1.55; color: var(--text-gray); margin-bottom:8px; }
+  .item-detail .linha:last-child{ margin-bottom:0; }
+  .item-detail .linha .rotulo{ flex-shrink:0; font-weight:800; color: var(--text); min-width:96px; }
+  .item-detail .linha.correcao .rotulo{ color: var(--red-bright); }
+
+  .fonte-tag{
+    margin-top: 20px;
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    font-size: .74rem;
+    color: var(--text-dim);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 20px;
+  }
+  .fonte-tag b{ color: var(--text); }
+
+  /* ---------- Dashboard ---------- */
+  .dash-resumo-global{
+    background: linear-gradient(120deg, var(--red-dark) 0%, #1a0505 100%);
+    border-radius:16px;
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    color:#fff;
+  }
+  body.light .dash-resumo-global{ background: linear-gradient(120deg, var(--red) 0%, #4a0c15 100%); }
+  .dash-resumo-global h3{ margin:0 0 4px; font-size:1.05rem; font-weight:800; }
+  .dash-resumo-global p{ margin:0 0 14px; font-size:.8rem; color: rgba(255,255,255,.75); }
+  .dash-resumo-global .progress-track{ background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.25); }
+  .dash-resumo-global .progress-fill{ background: #fff; }
+  .dash-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .dash-card{
+    background: var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding: 16px 18px;
+    cursor:pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,.14);
+    transition: background .15s, transform .1s, border-color .15s;
+  }
+  .dash-card:hover{ background: var(--card-hover); transform: translateY(-2px); border-color: var(--red-bright); }
+  .dash-card-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .dash-card-head .ic{ font-size:1.3rem; }
+  .dash-card h4{ margin:0 0 4px; font-size:.9rem; font-weight:700; }
+  .dash-card .freq-tag{ font-size:.66rem; color: var(--text-dim); text-transform:uppercase; letter-spacing:.4px; font-weight:700; margin-bottom:10px; }
+  .dash-card .progress-track{ height:7px; margin-bottom:6px; }
+  .dash-card .pct-row{ display:flex; justify-content:space-between; font-size:.72rem; color: var(--text-dim); }
+
+  .historico-box{
+    background: var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding: 16px 20px;
+  }
+  .historico-box h3{ margin:0 0 12px; font-size:.85rem; text-transform:uppercase; letter-spacing:.5px; color: var(--text-dim); }
+  .historico-linha{ display:flex; justify-content:space-between; align-items:center; font-size:.84rem; padding:6px 0; border-bottom:1px solid var(--border); }
+  .historico-linha:last-child{ border-bottom:none; }
+  .historico-linha .hd{ color: var(--text-gray); }
+  .historico-linha .hp{ font-weight:800; }
+  .historico-vazio{ font-size:.82rem; color: var(--text-dim); }
+
+  /* ---------- Não conformidades ---------- */
+  .nc-table-wrap{ overflow-x:auto; }
+  table.nc-table{ width:100%; border-collapse: collapse; font-size:.85rem; }
+  table.nc-table th{
+    text-align:left;
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color: var(--text-dim);
+    border-bottom:1px solid var(--border);
+    padding: 8px 10px;
+  }
+  table.nc-table td{ padding: 10px; border-bottom:1px solid var(--border); vertical-align:top; }
+  table.nc-table tr:last-child td{ border-bottom:none; }
+  .grav-chip{ font-size:.7rem; font-weight:800; padding:2px 9px; border-radius:20px; display:inline-block; }
+  .grav-chip.alta{ color: var(--red-bright); background: rgba(239,45,64,.12); }
+  .grav-chip.media{ color: var(--amber); background: rgba(242,184,75,.12); }
+  .grav-chip.baixa{ color: var(--text-dim); background: var(--panel); }
+  .nc-sec-title{ font-size:.85rem; font-weight:800; color: var(--text); margin: 22px 0 10px; }
+  .nc-sec-title:first-child{ margin-top:0; }
+  .nc-form{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .nc-form input[type=text]{
+    flex:1; min-width:180px;
+    background: var(--panel); border:1px solid var(--border); border-radius:8px;
+    color:var(--text); padding:9px 12px; font-size:.85rem; outline:none;
+  }
+  .nc-form input[type=text]:focus{ border-color: var(--red-bright); box-shadow: 0 0 0 3px var(--red-glow); }
+  .nc-form select{
+    background: var(--panel); border:1px solid var(--border); border-radius:8px;
+    color:var(--text); padding:9px 10px; font-size:.82rem; outline:none;
+  }
+  .nc-form button{
+    background: linear-gradient(135deg, var(--red-dark), var(--red-bright));
+    border:none; color:#fff; font-weight:700; font-size:.82rem;
+    padding: 9px 18px; border-radius:8px; cursor:pointer;
+  }
+  .nc-form button:hover{ filter: brightness(1.08); }
+  .nc-status-select{
+    background: var(--panel); border:1px solid var(--border); border-radius:6px;
+    color:var(--text); padding:4px 6px; font-size:.76rem;
+  }
+  .nc-del{ background:none; border:none; color: var(--text-dim); cursor:pointer; font-size:.9rem; }
+  .nc-del:hover{ color: var(--red-bright); }
+  .nc-empty{ font-size:.82rem; color: var(--text-dim); padding: 10px 0; }
+
+  .empty-state{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding: 70px 20px; color: var(--text-dim);
+  }
+  .empty-state .empty-icon{
+    width: 72px; height: 72px; border-radius: 20px;
+    background: linear-gradient(135deg, rgba(180,25,42,.18), rgba(232,184,75,.1));
+    border: 1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 2rem; margin-bottom: 18px;
+  }
+
+  .aviso-responsabilidade{
+    margin-top: 28px;
+    background: linear-gradient(160deg, rgba(228,23,44,.08), rgba(228,23,44,.02));
+    border: 1px solid rgba(228,23,44,.35);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .aviso-responsabilidade .aviso-titulo{
+    display:flex; align-items:center; gap:8px;
+    font-size: .95rem; font-weight:800; color: var(--red-bright);
+    margin-bottom: 12px; letter-spacing:.2px;
+  }
+  .aviso-responsabilidade p{ font-size: .78rem; line-height: 1.6; color: var(--text-gray); margin: 0 0 4px; }
+  .aviso-responsabilidade strong{ color: var(--text); }
+
+  @media (max-width: 800px){
+    body{ height:auto; overflow:visible; }
+    .topbar-app{ padding: 8px 14px; }
+    .topbar-app .titulo-principal{ font-size: .85rem; white-space:normal; }
+    .topbar-app .titulo-descricao{ font-size: .64rem; white-space:normal; }
+    .app-body{ flex-direction:column; min-height:auto; }
+    .sidebar{ width:100%; height:auto; border-right:none; border-bottom:1px solid var(--border); max-height: 44vh; }
+    .main{ padding: 20px 18px 50px; height:auto; overflow-y:visible; }
+    .main-inner{ max-width:100%; }
+  }
+</style>
+</head>
+<body class="light">
+
+<div class="topbar-app">
+  <div class="logo-wrap">
+    <a href="https://betofs1.github.io/farmapratica/" title="Voltar para a página inicial do FarmaPrática">
+      <div class="brand">
+        <img src="logo.png" alt="FarmaPrática">
+        <div class="brand-text">
+          <h1>Farma<span>Prática</span></h1>
+          <p>Plataforma de referência para a farmácia comunitária</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="titulo-central">
+    <div class="titulo-principal">CHECKLIST DE ROTINA</div>
+    <div class="titulo-descricao">Conferência diária de conformidade com base em RDCs, portarias e boas práticas farmacêuticas</div>
+  </div>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+  </button>
+</div>
+
+<div class="app-body">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="busca" placeholder="Buscar item do checklist...">
+      </div>
+    </div>
+    <div class="sidebar-list" id="lista-categorias"></div>
+  </div>
+
+  <div class="main">
+    <div class="main-inner">
+      <div id="conteudo"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// DADOS: categorias e itens do checklist
+// =====================================================================
+const DATA = {
+  freqLabel: { diario: 'Diário', semanal: 'Semanal', mensal: 'Mensal' },
+  freqIcon:  { diario: '☀️', semanal: '📆', mensal: '🗓️' },
+  categorias: [
+    {
+      id: 'temperatura', nome: 'Temperatura e Umidade', icone: '🌡️', freq: 'diario',
+      itens: [
+        { id:'t1', texto:'Temperatura da geladeira de medicamentos aferida e registrada (2–8 °C)', crit:'alta',
+          motivo:'Medicamentos termolábeis (insulinas, alguns colírios, imunobiológicos) perdem estabilidade físico-química fora da faixa recomendada, comprometendo eficácia e segurança.',
+          legal:'RDC nº 44/2009 (Boas Práticas Farmacêuticas) e RDC nº 430/2020 (armazenagem e transporte de medicamentos).',
+          correcao:'Isolar os produtos armazenados fora da faixa, registrar a ocorrência, avaliar estabilidade com o farmacêutico responsável antes de liberar para dispensação.' },
+        { id:'t2', texto:'Temperatura ambiente da área de armazenamento dentro do especificado em bula', crit:'media',
+          motivo:'Excipientes e formas farmacêuticas sólidas ou líquidas podem se degradar quando expostas a calor excessivo.',
+          legal:'RDC nº 44/2009 – condições ambientais de conservação de medicamentos.',
+          correcao:'Verificar climatização do ambiente, isolar lotes suspeitos de exposição térmica e registrar a não conformidade.' },
+        { id:'t3', texto:'Umidade relativa do ambiente de armazenamento verificada', crit:'baixa',
+          motivo:'Umidade elevada favorece degradação de comprimidos efervescentes, cápsulas e embalagens de papel/cartuchos.',
+          legal:'RDC nº 44/2009 – armazenamento de medicamentos.',
+          correcao:'Utilizar desumidificador ou ventilação adequada e reorganizar produtos sensíveis à umidade.' },
+        { id:'t4', texto:'Equipamento de refrigeração funcionando corretamente (sem excesso de gelo, borracha de vedação íntegra)', crit:'media',
+          motivo:'Falhas no equipamento comprometem a manutenção contínua da cadeia de frio.',
+          legal:'RDC nº 430/2020 – armazenagem e transporte.',
+          correcao:'Acionar manutenção do equipamento e transferir produtos para geladeira de backup, se disponível.' },
+        { id:'t5', texto:'Plano de contingência para falha de refrigeração conhecido pela equipe', crit:'alta',
+          motivo:'Resposta rápida evita perda de estabilidade de lotes inteiros em caso de pane elétrica ou falha do equipamento.',
+          legal:'RDC nº 430/2020 c/c RDC nº 44/2009.',
+          correcao:'Revisar/elaborar POP de contingência e testar periodicamente a disponibilidade de equipamento reserva.' }
+      ]
+    },
+    {
+      id: 'medicamentos', nome: 'Medicamentos e Validades', icone: '💊', freq: 'diario',
+      itens: [
+        { id:'m1', texto:'Medicamentos vencidos identificados e retirados do estoque ativo', crit:'alta',
+          motivo:'A dispensação de medicamento vencido constitui infração sanitária e risco direto à saúde do paciente.',
+          legal:'Lei nº 5.991/1973 (controle sanitário) e RDC nº 44/2009.',
+          correcao:'Segregar em área de quarentena, providenciar baixa e descarte conforme RDC nº 222/2018 e comunicar o RT.' },
+        { id:'m2', texto:'Medicamentos próximos ao vencimento sinalizados para giro prioritário (FEFO)', crit:'media',
+          motivo:'Antecipar o giro evita perdas por vencimento e reduz o risco de dispensação inadvertida de itens vencidos.',
+          legal:'RDC nº 44/2009 – organização e controle de estoque.',
+          correcao:'Aplicar FEFO (primeiro que vence, primeiro que sai) e avaliar troca/devolução junto ao distribuidor quando cabível.' },
+        { id:'m3', texto:'Produtos com embalagem avariada, violada ou sem identificação isolados', crit:'alta',
+          motivo:'Compromete a rastreabilidade do produto e pode indicar exposição a condições inadequadas.',
+          legal:'RDC nº 44/2009.',
+          correcao:'Retirar imediatamente da área de venda, registrar a ocorrência e avaliar descarte ou devolução.' },
+        { id:'m4', texto:'Medicamentos fracionados/reembalados identificados com lote e validade', crit:'alta',
+          motivo:'A ausência de identificação impede a rastreabilidade e a verificação do prazo de validade real.',
+          legal:'RDC nº 44/2009 – fracionamento de medicamentos.',
+          correcao:'Reidentificar imediatamente com lote e validade de origem ou descartar se a procedência não puder ser garantida.' },
+        { id:'m5', texto:'Medicamentos termolábeis conferidos quanto ao armazenamento correto (geladeira x prateleira)', crit:'alta',
+          motivo:'Armazenamento fora da geladeira compromete a estabilidade de produtos termolábeis em poucas horas.',
+          legal:'RDC nº 430/2020.',
+          correcao:'Transferir imediatamente para refrigeração adequada e avaliar se houve perda de estabilidade.' }
+      ]
+    },
+    {
+      id: 'receituario', nome: 'Receituário e Dispensação', icone: '📄', freq: 'diario',
+      itens: [
+        { id:'r1', texto:'Receitas de medicamentos sob controle especial conferidas quanto à validade do prazo', crit:'alta',
+          motivo:'Receitas fora do prazo de validade não podem ser aviadas.',
+          legal:'Portaria SVS/MS nº 344/1998 – prazo de validade da receita conforme a lista de controle.',
+          correcao:'Recusar a dispensação e orientar o paciente a solicitar nova prescrição ao médico.' },
+        { id:'r2', texto:'Legibilidade e completude da prescrição (medicamento, concentração, posologia, quantidade e identificação do prescritor)', crit:'alta',
+          motivo:'Prescrições incompletas ou ilegíveis aumentam o risco de erro de dispensação.',
+          legal:'Portaria SVS/MS nº 344/1998 e RDC nº 44/2009 (dispensação).',
+          correcao:'Contatar o prescritor para esclarecimento antes de dispensar; nunca presumir a informação faltante.' },
+        { id:'r3', texto:'Retenção da via exigida de Notificação de Receita, quando aplicável', crit:'alta',
+          motivo:'A retenção documental é exigência legal para o controle de medicamentos sujeitos a controle especial.',
+          legal:'Portaria SVS/MS nº 344/1998.',
+          correcao:'Reter a via correta, carimbar e escriturar no SNGPC antes da entrega do medicamento.' },
+        { id:'r4', texto:'Orientação verbal sobre posologia, forma de uso e conservação registrada', crit:'media',
+          motivo:'A orientação farmacêutica reduz erros de uso e reforça a adesão ao tratamento.',
+          legal:'RDC nº 44/2009 – atenção farmacêutica na dispensação.',
+          correcao:'Retomar a orientação ao paciente e registrar o atendimento no prontuário/sistema, quando disponível.' },
+        { id:'r5', texto:'Prescrição digital validada (assinatura eletrônica íntegra e ausência de reuso indevido)', crit:'alta',
+          motivo:'Prescrições eletrônicas fraudadas ou reutilizadas comprometem o controle sanitário.',
+          legal:'RDC nº 44/2009 c/c normas vigentes de prescrição eletrônica.',
+          correcao:'Validar a assinatura no verificador oficial antes de dispensar e registrar o número/hash da prescrição.' }
+      ]
+    },
+    {
+      id: 'controlados', nome: 'Medicamentos Controlados', icone: '🔒', freq: 'diario',
+      itens: [
+        { id:'c1', texto:'Armário/cofre de controlados mantido fechado, com chaves sob responsabilidade do RT ou substituto', crit:'alta',
+          motivo:'O acesso restrito é exigência básica de segurança para produtos sujeitos a controle especial.',
+          legal:'Portaria SVS/MS nº 344/1998 – armazenamento.',
+          correcao:'Restabelecer o fechamento imediatamente e identificar o responsável pela guarda das chaves no turno.' },
+        { id:'c2', texto:'Escrituração (livro ou SNGPC eletrônico) atualizada com as entradas e saídas do dia', crit:'alta',
+          motivo:'A escrituração em dia é a base do controle de estoque de medicamentos sujeitos a controle especial.',
+          legal:'Portaria SVS/MS nº 344/1998 e RDC nº 471/2021 (SNGPC eletrônico).',
+          correcao:'Lançar retroativamente com justificativa e regularizar antes do fechamento do balanço mensal.' },
+        { id:'c3', texto:'Balanço físico do estoque de controlados compatível com o escriturado', crit:'alta',
+          motivo:'Divergências podem indicar erro de registro ou desvio de produto controlado.',
+          legal:'Portaria SVS/MS nº 344/1998.',
+          correcao:'Apurar a divergência, investigar a causa e comunicar o RT; se houver indício de desvio, notificar a vigilância sanitária.' },
+        { id:'c4', texto:'Notificações de Receita arquivadas em ordem e dentro do prazo de guarda', crit:'media',
+          motivo:'O arquivamento organizado é exigido para fins de fiscalização e rastreabilidade.',
+          legal:'Portaria SVS/MS nº 344/1998.',
+          correcao:'Reorganizar o arquivo por data/tipo de receita e verificar o prazo mínimo de guarda aplicável.' },
+        { id:'c5', texto:'Transmissão do SNGPC realizada dentro do prazo legal', crit:'alta',
+          motivo:'O atraso na transmissão é infração sanitária passível de penalidade.',
+          legal:'RDC nº 471/2021.',
+          correcao:'Regularizar a transmissão pendente e verificar a causa do atraso (conectividade, erro de sistema, etc.).' }
+      ]
+    },
+    {
+      id: 'limpeza', nome: 'Limpeza e Biossegurança', icone: '🧹', freq: 'diario',
+      itens: [
+        { id:'l1', texto:'Balcões de atendimento e áreas de manipulação higienizados', crit:'media',
+          motivo:'Reduz o risco de contaminação cruzada em áreas de contato com medicamentos e pacientes.',
+          legal:'RDC nº 44/2009 – condições sanitárias.',
+          correcao:'Realizar a higienização conforme o POP de limpeza vigente e registrar o horário.' },
+        { id:'l2', texto:'Piso e áreas comuns limpos e sem obstrução', crit:'baixa',
+          motivo:'Condições básicas de sanitização e segurança do ambiente de trabalho.',
+          legal:'RDC nº 44/2009.',
+          correcao:'Solicitar limpeza e remover objetos que obstruam a circulação.' },
+        { id:'l3', texto:'Descarte de perfurocortantes em coletor adequado (quando há serviços/testes farmacêuticos)', crit:'alta',
+          motivo:'O descarte inadequado expõe a equipe e terceiros a risco biológico.',
+          legal:'RDC nº 222/2018 (PGRSS) e NR-32.',
+          correcao:'Substituir o coletor imediatamente e reforçar o treinamento da equipe sobre descarte seguro.' },
+        { id:'l4', texto:'Resíduos segregados conforme classificação (grupos A, B, D e E)', crit:'alta',
+          motivo:'A segregação incorreta compromete o gerenciamento de resíduos e pode gerar risco sanitário/ambiental.',
+          legal:'RDC nº 222/2018 – Plano de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS).',
+          correcao:'Reclassificar os resíduos e reforçar a sinalização e o treinamento da equipe.' },
+        { id:'l5', texto:'Lixeiras identificadas por cor/símbolo conforme classificação de resíduos', crit:'baixa',
+          motivo:'Facilita a segregação correta pela equipe e visitantes.',
+          legal:'RDC nº 222/2018.',
+          correcao:'Providenciar identificação adequada nas lixeiras conforme o PGRSS.' }
+      ]
+    },
+    {
+      id: 'estoque', nome: 'Estoque e Organização', icone: '📦', freq: 'semanal',
+      itens: [
+        { id:'e1', texto:'Estoque organizado seguindo FEFO (primeiro que vence, primeiro que sai)', crit:'media',
+          motivo:'Reduz perdas por vencimento e garante giro adequado dos produtos.',
+          legal:'RDC nº 44/2009 – organização de estoque.',
+          correcao:'Reorganizar as prateleiras priorizando os lotes com validade mais próxima na frente.' },
+        { id:'e2', texto:'Produtos não armazenados diretamente no chão (uso de estrados/prateleiras)', crit:'media',
+          motivo:'Contato direto com o piso favorece contaminação e danos às embalagens.',
+          legal:'RDC nº 44/2009 – condições de armazenamento.',
+          correcao:'Transferir os produtos para estrados ou prateleiras adequadas.' },
+        { id:'e3', texto:'Distância mínima das paredes respeitada para ventilação e limpeza', crit:'baixa',
+          motivo:'Facilita a circulação de ar e a limpeza, prevenindo umidade acumulada.',
+          legal:'RDC nº 44/2009.',
+          correcao:'Reposicionar as prateleiras/pilhas respeitando o espaçamento recomendado.' },
+        { id:'e4', texto:'Lotes recebidos conferidos frente à nota fiscal e ao prazo de validade', crit:'alta',
+          motivo:'O recebimento sem conferência pode introduzir produtos vencidos ou divergentes no estoque.',
+          legal:'RDC nº 44/2009 e RDC nº 430/2020 (recebimento e transporte).',
+          correcao:'Conferir cada lote recebido antes de disponibilizar para venda e registrar divergências junto ao fornecedor.' },
+        { id:'e5', texto:'Inventário parcial/rotativo do estoque realizado', crit:'media',
+          motivo:'Permite identificar divergências e produtos próximos ao vencimento com antecedência.',
+          legal:'RDC nº 44/2009.',
+          correcao:'Programar contagem cíclica por categoria terapêutica ou setor do estoque.' },
+        { id:'e6', texto:'Prateleiras e gôndolas limpas e sem produtos vencidos misturados aos válidos', crit:'media',
+          motivo:'Reduz risco de dispensação inadvertida de produto vencido ou danificado.',
+          legal:'RDC nº 44/2009.',
+          correcao:'Higienizar e reorganizar segregando imediatamente qualquer item vencido ou avariado.' }
+      ]
+    },
+    {
+      id: 'servicos', nome: 'Serviços Farmacêuticos', icone: '👨‍⚕️', freq: 'semanal',
+      itens: [
+        { id:'s1', texto:'Sala/espaço de serviços farmacêuticos organizado e com privacidade adequada', crit:'media',
+          motivo:'A privacidade é requisito para a prestação de serviços clínicos (aferições, testes, orientações).',
+          legal:'RDC nº 44/2009 (serviços farmacêuticos) e Resolução CFF nº 585/2013.',
+          correcao:'Reorganizar o espaço e garantir isolamento visual/acústico adequado ao atendimento.' },
+        { id:'s2', texto:'Equipamentos (esfigmomanômetro, glicosímetro) calibrados/aferidos dentro do prazo', crit:'alta',
+          motivo:'Equipamentos descalibrados geram resultados clínicos incorretos.',
+          legal:'RDC nº 44/2009; RDC nº 786/2023 quando aplicável a testes rápidos (EAC).',
+          correcao:'Retirar o equipamento de uso até a calibração e agendar manutenção/verificação metrológica.' },
+        { id:'s3', texto:'Materiais de uso único e antissépticos dentro da validade', crit:'alta',
+          motivo:'Materiais vencidos comprometem a segurança do serviço prestado ao paciente.',
+          legal:'RDC nº 44/2009.',
+          correcao:'Descartar os itens vencidos e repor o estoque de materiais de consumo.' },
+        { id:'s4', texto:'Registro dos serviços prestados preenchido (aferição de PA, glicemia, testes, etc.)', crit:'media',
+          motivo:'O registro do cuidado farmacêutico é exigido para fins de rastreabilidade e continuidade do cuidado.',
+          legal:'Resolução CFF nº 585/2013.',
+          correcao:'Preencher os registros pendentes e reforçar a rotina de documentação com a equipe.' },
+        { id:'s5', texto:'Descarte de materiais perfurocortantes do serviço farmacêutico conforme PGRSS', crit:'alta',
+          motivo:'Evita acidentes com material biológico e contaminação.',
+          legal:'RDC nº 222/2018 e NR-32.',
+          correcao:'Substituir o coletor e revisar o fluxo de descarte com a equipe.' }
+      ]
+    },
+    {
+      id: 'documentacao', nome: 'Documentação e Licenças', icone: '📋', freq: 'mensal',
+      itens: [
+        { id:'d1', texto:'Licença Sanitária vigente e exposta em local visível', crit:'alta',
+          motivo:'O funcionamento sem licença sanitária válida é infração grave.',
+          legal:'Lei nº 5.991/1973.',
+          correcao:'Verificar prazo de validade junto à vigilância sanitária municipal e providenciar renovação.' },
+        { id:'d2', texto:'Autorização de Funcionamento de Empresa (AFE/AE) da Anvisa vigente', crit:'alta',
+          motivo:'Exigência para o funcionamento legal de estabelecimentos que comercializam medicamentos.',
+          legal:'Lei nº 6.360/1976 e regulamentação Anvisa correlata.',
+          correcao:'Consultar a situação no portal da Anvisa e regularizar pendências junto ao órgão.' },
+        { id:'d3', texto:'Comprovante de Responsabilidade Técnica (RT) do farmacêutico exposto e CRF regularizado', crit:'alta',
+          motivo:'A farmácia deve ter responsável técnico habilitado e visivelmente identificado durante todo o funcionamento.',
+          legal:'Lei nº 13.021/2014.',
+          correcao:'Regularizar a anotação de responsabilidade técnica junto ao CRF e expor o comprovante atualizado.' },
+        { id:'d4', texto:'POPs (Procedimentos Operacionais Padrão) revisados e atualizados', crit:'media',
+          motivo:'POPs desatualizados não refletem a prática real e comprometem auditorias.',
+          legal:'RDC nº 44/2009.',
+          correcao:'Revisar os POPs com a equipe e providenciar nova versão datada e assinada.' },
+        { id:'d5', texto:'Manual de Boas Práticas Farmacêuticas disponível e atualizado', crit:'media',
+          motivo:'Documento de referência exigido para demonstrar conformidade às Boas Práticas Farmacêuticas.',
+          legal:'RDC nº 44/2009.',
+          correcao:'Atualizar o manual e disponibilizá-lo para consulta da equipe.' },
+        { id:'d6', texto:'Plano de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS) revisado', crit:'media',
+          motivo:'O PGRSS deve refletir a realidade operacional atual do estabelecimento.',
+          legal:'RDC nº 222/2018.',
+          correcao:'Revisar o plano junto ao responsável técnico e atualizar conforme mudanças na rotina.' }
+      ]
+    }
+  ]
+};
+
+const TODOS_ITENS = DATA.categorias.flatMap(c => c.itens.map(i => ({...i, catId:c.id, catNome:c.nome, catIcone:c.icone})));
+
+// =====================================================================
+// ESTADO / PERSISTÊNCIA (localStorage)
+// =====================================================================
+const K_STATE = 'checklistFarmacia_state';
+const K_RESET = 'checklistFarmacia_lastReset';
+const K_HIST  = 'checklistFarmacia_historico';
+const K_NC    = 'checklistFarmacia_naoConformidadesManual';
+
+function carregarJSON(key, padrao){
+  try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : padrao; }catch(e){ return padrao; }
+}
+function salvarJSON(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
+
+let estado = carregarJSON(K_STATE, {});         // { itemId: true/false }
+let historico = carregarJSON(K_HIST, []);       // [{data, percentual}]
+let ncManual = carregarJSON(K_NC, []);          // [{id, texto, gravidade, status}]
+let lastReset = carregarJSON(K_RESET, {});      // { diario:'YYYY-MM-DD', semanal:'YYYY-Www', mensal:'YYYY-MM' }
+
+let categoriaAtual = null; // null = dashboard, 'nc' = não conformidades
+
+// ---------- Reset automático por período ----------
+function hojeISO(d){ return d.toISOString().slice(0,10); }
+function semanaISO(d){
+  const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = (dt.getUTCDay() + 6) % 7;
+  dt.setUTCDate(dt.getUTCDate() - dayNum + 3);
+  const firstThursday = new Date(Date.UTC(dt.getUTCFullYear(),0,4));
+  const week = 1 + Math.round(((dt - firstThursday) / 86400000 - 3 + ((firstThursday.getUTCDay()+6)%7)) / 7);
+  return dt.getUTCFullYear() + '-W' + String(week).padStart(2,'0');
+}
+function mesISO(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
+
+function percentualPeriodo(freq){
+  const itens = TODOS_ITENS.filter(i => DATA.categorias.find(c=>c.id===i.catId).freq === freq);
+  if(itens.length === 0) return 0;
+  const marcados = itens.filter(i => estado[i.id]).length;
+  return Math.round((marcados/itens.length)*100);
+}
+
+function resetarPeriodo(freq){
+  DATA.categorias.filter(c => c.freq === freq).forEach(c => {
+    c.itens.forEach(i => { estado[i.id] = false; });
+  });
+}
+
+(function verificarResets(){
+  const agora = new Date();
+  const diaAtual = hojeISO(agora);
+  const semanaAtual = semanaISO(agora);
+  const mesAtual = mesISO(agora);
+
+  if(lastReset.diario && lastReset.diario !== diaAtual){
+    const pct = percentualPeriodo('diario');
+    historico.unshift({ data: lastReset.diario, percentual: pct });
+    historico = historico.slice(0, 14);
+    resetarPeriodo('diario');
+  }
+  if(lastReset.semanal && lastReset.semanal !== semanaAtual){
+    resetarPeriodo('semanal');
+  }
+  if(lastReset.mensal && lastReset.mensal !== mesAtual){
+    resetarPeriodo('mensal');
+  }
+  lastReset = { diario: diaAtual, semanal: semanaAtual, mensal: mesAtual };
+  salvarJSON(K_RESET, lastReset);
+  salvarJSON(K_STATE, estado);
+  salvarJSON(K_HIST, historico);
+})();
+
+// =====================================================================
+// TEMA
+// =====================================================================
+(function(){
+  const salvo = localStorage.getItem('farmapratica-theme');
+  if(salvo === 'dark'){ document.body.classList.remove('light'); }
+})();
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('farmapratica-theme', document.body.classList.contains('light') ? 'light' : 'dark');
+}
+
+// =====================================================================
+// SIDEBAR
+// =====================================================================
+function contagemCategoria(cat){
+  const total = cat.itens.length;
+  const marcados = cat.itens.filter(i => estado[i.id]).length;
+  return { total, marcados };
+}
+function contarNaoConformidadesAbertas(){
+  const autoAbertas = TODOS_ITENS.filter(i => (i.crit === 'alta' || i.crit === 'media') && !estado[i.id]).length;
+  const manualAbertas = ncManual.filter(n => n.status !== 'Resolvida').length;
+  return autoAbertas + manualAbertas;
+}
+
+function renderSidebar(filtro=''){
+  const lista = document.getElementById('lista-categorias');
+  lista.innerHTML = '';
+  const termo = filtro.trim().toLowerCase();
+
+  // Visão geral
+  const dashBtn = document.createElement('button');
+  dashBtn.className = 'cat-item dash-item' + (categoriaAtual===null ? ' active' : '');
+  dashBtn.innerHTML = `<div class="cat-item-label"><span>🏠</span><span class="txt">Visão Geral</span></div>`;
+  dashBtn.onclick = () => { categoriaAtual = null; renderSidebar(document.getElementById('busca').value); renderMain(); };
+  lista.appendChild(dashBtn);
+
+  if(termo){
+    const encontrados = TODOS_ITENS.filter(i => i.texto.toLowerCase().includes(termo));
+    const header = document.createElement('div');
+    header.className = 'cat-header';
+    header.textContent = `Resultados (${encontrados.length})`;
+    lista.appendChild(header);
+    if(encontrados.length === 0){
+      const vazio = document.createElement('div');
+      vazio.className = 'nc-empty';
+      vazio.textContent = 'Nenhum item encontrado.';
+      lista.appendChild(vazio);
+    }
+    encontrados.forEach(i => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-item' + (categoriaAtual === i.catId ? ' active' : '');
+      btn.innerHTML = `<div class="cat-item-label"><span>${i.catIcone}</span><span class="txt">${i.texto}</span></div>`;
+      btn.onclick = () => { categoriaAtual = i.catId; renderMain(true, i.id); };
+      lista.appendChild(btn);
+    });
+    return;
+  }
+
+  ['diario','semanal','mensal'].forEach(freq => {
+    const cats = DATA.categorias.filter(c => c.freq === freq);
+    if(cats.length === 0) return;
+    const header = document.createElement('div');
+    header.className = 'cat-header';
+    header.textContent = `${DATA.freqIcon[freq]} ${DATA.freqLabel[freq]}`;
+    lista.appendChild(header);
+    cats.forEach(c => {
+      const { total, marcados } = contagemCategoria(c);
+      const btn = document.createElement('button');
+      btn.className = 'cat-item' + (categoriaAtual === c.id ? ' active' : '');
+      btn.innerHTML = `<div class="cat-item-label"><span>${c.icone}</span><span class="txt">${c.nome}</span></div><span class="cat-count">${marcados}/${total}</span>`;
+      btn.onclick = () => { categoriaAtual = c.id; renderSidebar(); renderMain(); };
+      lista.appendChild(btn);
+    });
+  });
+
+  const ncHeader = document.createElement('div');
+  ncHeader.className = 'cat-header';
+  ncHeader.textContent = '⚠️ Painel';
+  lista.appendChild(ncHeader);
+  const ncBtn = document.createElement('button');
+  const ncAbertas = contarNaoConformidadesAbertas();
+  ncBtn.className = 'cat-item nc-item' + (categoriaAtual === 'nc' ? ' active' : '');
+  ncBtn.innerHTML = `<div class="cat-item-label"><span>🚨</span><span class="txt">Não Conformidades</span></div><span class="cat-count">${ncAbertas}</span>`;
+  ncBtn.onclick = () => { categoriaAtual = 'nc'; renderSidebar(); renderMain(); };
+  lista.appendChild(ncBtn);
+}
+
+document.getElementById('busca').addEventListener('input', e => renderSidebar(e.target.value));
+
+// =====================================================================
+// STATUS DA CATEGORIA (semáforo)
+// =====================================================================
+function statusCategoria(cat){
+  const { total, marcados } = contagemCategoria(cat);
+  const altasAbertas = cat.itens.filter(i => i.crit === 'alta' && !estado[i.id]).length;
+  if(altasAbertas > 0) return { classe:'critico', label:'🔴 Não Conforme' };
+  if(marcados < total) return { classe:'atencao', label:'🟡 Atenção' };
+  return { classe:'ok', label:'🟢 Conforme' };
+}
+
+// =====================================================================
+// RENDER PRINCIPAL
+// =====================================================================
+function renderMain(abrirItem=false, itemIdParaAbrir=null){
+  const el = document.getElementById('conteudo');
+
+  if(categoriaAtual === null){ renderDashboard(el); return; }
+  if(categoriaAtual === 'nc'){ renderNaoConformidades(el); return; }
+
+  const cat = DATA.categorias.find(c => c.id === categoriaAtual);
+  const { total, marcados } = contagemCategoria(cat);
+  const pct = total ? Math.round((marcados/total)*100) : 0;
+  const status = statusCategoria(cat);
+
+  el.innerHTML = `
+    <div class="main-header">
+      <div>
+        <h2><span>${cat.icone}</span> ${cat.nome}</h2>
+        <div class="tags-row">
+          <span class="cat-tag">${DATA.freqIcon[cat.freq]} ${DATA.freqLabel[cat.freq]}</span>
+          <span class="status-chip ${status.classe}">${status.label}</span>
+        </div>
+      </div>
+      <button class="btn-ghost" id="btn-reset-cat">↺ Reiniciar rotina</button>
+    </div>
+
+    <div class="resumo-bar">
+      <div class="resumo-top">
+        <div class="resumo-info"><b>${marcados}/${total}</b> itens conferidos hoje</div>
+        <div class="resumo-info"><b>${pct}%</b></div>
+      </div>
+      <div class="progress-track"><div class="progress-fill ${pct===100?'full':''}" style="width:${pct}%"></div></div>
+    </div>
+
+    <div class="itens-grid" id="itens-grid"></div>
+    <div class="fonte-tag">📚 Base normativa consolidada a partir de RDCs, portarias e resoluções vigentes — sempre confirme a versão mais recente na legislação oficial.</div>
+  `;
+
+  const grid = document.getElementById('itens-grid');
+  cat.itens.forEach(item => {
+    const checked = !!estado[item.id];
+    const abrirEsse = abrirItem && item.id === itemIdParaAbrir;
+    const dot = item.crit === 'alta' ? '🔴' : item.crit === 'media' ? '🟡' : '🟢';
+    const card = document.createElement('div');
+    card.className = 'item-card' + (checked ? ' checked' : '') + (abrirEsse ? ' aberto' : '');
+    card.innerHTML = `
+      <div class="item-main">
+        <div class="item-check" data-role="check">${checked ? '✓' : ''}</div>
+        <div class="item-texto">${item.texto}</div>
+        <div class="crit-dot">${dot}</div>
+        <div class="chevron" data-role="chevron">▶</div>
+      </div>
+      <div class="item-detail">
+        <div class="linha"><span class="rotulo">Por que</span><span>${item.motivo}</span></div>
+        <div class="linha"><span class="rotulo">Base legal</span><span>${item.legal}</span></div>
+        <div class="linha correcao"><span class="rotulo">Se não conforme</span><span>${item.correcao}</span></div>
+      </div>
+    `;
+    card.querySelector('[data-role="check"]').addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      estado[item.id] = !estado[item.id];
+      salvarJSON(K_STATE, estado);
+      renderSidebar(document.getElementById('busca').value);
+      renderMain();
+    });
+    card.querySelector('.item-main').addEventListener('click', () => {
+      card.classList.toggle('aberto');
+    });
+    grid.appendChild(card);
+  });
+
+  document.getElementById('btn-reset-cat').addEventListener('click', () => {
+    if(!confirm(`Reiniciar todos os itens de "${cat.nome}"?`)) return;
+    cat.itens.forEach(i => { estado[i.id] = false; });
+    salvarJSON(K_STATE, estado);
+    renderSidebar();
+    renderMain();
+  });
+
+  if(abrirItem && itemIdParaAbrir){
+    const alvo = document.querySelector(`.item-card.aberto`);
+    if(alvo) alvo.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+}
+
+// ---------- Dashboard ----------
+function renderDashboard(el){
+  const totalGeral = TODOS_ITENS.length;
+  const marcadosGeral = TODOS_ITENS.filter(i => estado[i.id]).length;
+  const pctGeral = totalGeral ? Math.round((marcadosGeral/totalGeral)*100) : 0;
+  const ncAbertas = contarNaoConformidadesAbertas();
+
+  el.innerHTML = `
+    <div class="main-header">
+      <div>
+        <h2>📊 Visão Geral da Rotina</h2>
+        <div class="tags-row"><span class="cat-tag">${new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' })}</span></div>
+      </div>
+    </div>
+
+    <div class="dash-resumo-global">
+      <h3>Conformidade geral de hoje</h3>
+      <p>${marcadosGeral} de ${totalGeral} itens conferidos em todas as rotinas · ${ncAbertas} pendência(s) em aberto</p>
+      <div class="progress-track"><div class="progress-fill" style="width:${pctGeral}%"></div></div>
+    </div>
+
+    <div class="dash-grid" id="dash-grid"></div>
+
+    <div class="historico-box">
+      <h3>📅 Histórico da rotina diária</h3>
+      <div id="historico-lista"></div>
+    </div>
+
+    <div class="aviso-responsabilidade">
+      <div class="aviso-titulo">⚠️ Aviso de Uso</div>
+      <p>Este checklist é uma <strong>ferramenta de apoio operacional</strong> para a rotina do farmacêutico responsável técnico e de sua equipe. Ele não substitui a leitura integral das normas citadas, que devem ser sempre consultadas em sua versão vigente e integral junto à Anvisa e demais órgãos reguladores.</p>
+      <p>Os dados marcados são armazenados <strong>apenas no navegador do dispositivo utilizado</strong> (armazenamento local), não havendo envio a servidores externos.</p>
+    </div>
+  `;
+
+  const grid = document.getElementById('dash-grid');
+  DATA.categorias.forEach(cat => {
+    const { total, marcados } = contagemCategoria(cat);
+    const pct = total ? Math.round((marcados/total)*100) : 0;
+    const status = statusCategoria(cat);
+    const card = document.createElement('div');
+    card.className = 'dash-card';
+    card.innerHTML = `
+      <div class="dash-card-head"><span class="ic">${cat.icone}</span><span class="status-chip ${status.classe}">${status.label.split(' ')[0]}</span></div>
+      <h4>${cat.nome}</h4>
+      <div class="freq-tag">${DATA.freqIcon[cat.freq]} ${DATA.freqLabel[cat.freq]}</div>
+      <div class="progress-track"><div class="progress-fill ${pct===100?'full':''}" style="width:${pct}%"></div></div>
+      <div class="pct-row"><span>${marcados}/${total} itens</span><span>${pct}%</span></div>
+    `;
+    card.onclick = () => { categoriaAtual = cat.id; renderSidebar(); renderMain(); };
+    grid.appendChild(card);
+  });
+
+  const histEl = document.getElementById('historico-lista');
+  if(historico.length === 0){
+    histEl.innerHTML = '<div class="historico-vazio">O histórico será registrado automaticamente ao final de cada dia.</div>';
+  } else {
+    histEl.innerHTML = historico.map(h => {
+      const d = new Date(h.data + 'T00:00:00');
+      const label = d.toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short' });
+      const cor = h.percentual === 100 ? 'var(--green)' : h.percentual >= 70 ? 'var(--amber)' : 'var(--red-bright)';
+      return `<div class="historico-linha"><span class="hd">${label}</span><span class="hp" style="color:${cor}">${h.percentual}%</span></div>`;
+    }).join('');
+  }
+}
+
+// ---------- Painel de Não Conformidades ----------
+function renderNaoConformidades(el){
+  const autoAbertas = TODOS_ITENS.filter(i => (i.crit === 'alta' || i.crit === 'media') && !estado[i.id]);
+
+  el.innerHTML = `
+    <div class="main-header">
+      <div><h2>🚨 Painel de Não Conformidades</h2></div>
+    </div>
+
+    <div class="nc-sec-title">Pendências detectadas automaticamente (itens não conferidos)</div>
+    <div class="nc-table-wrap">
+      <table class="nc-table">
+        <thead><tr><th>Ocorrência</th><th>Rotina</th><th>Gravidade</th><th>Status</th></tr></thead>
+        <tbody id="nc-auto-body"></tbody>
+      </table>
+    </div>
+
+    <div class="nc-sec-title">Registro manual de ocorrências</div>
+    <div class="nc-form">
+      <input type="text" id="nc-texto" placeholder="Descrever a ocorrência...">
+      <select id="nc-gravidade">
+        <option value="alta">Alta</option>
+        <option value="media" selected>Média</option>
+        <option value="baixa">Baixa</option>
+      </select>
+      <button id="nc-add">Adicionar</button>
+    </div>
+    <div class="nc-table-wrap">
+      <table class="nc-table">
+        <thead><tr><th>Ocorrência</th><th>Gravidade</th><th>Status</th><th></th></tr></thead>
+        <tbody id="nc-manual-body"></tbody>
+      </table>
+    </div>
+  `;
+
+  const autoBody = document.getElementById('nc-auto-body');
+  if(autoAbertas.length === 0){
+    autoBody.innerHTML = `<tr><td colspan="4" class="nc-empty">Nenhuma pendência crítica ou moderada em aberto. ✅</td></tr>`;
+  } else {
+    autoBody.innerHTML = autoAbertas.map(i => `
+      <tr>
+        <td>${i.texto}</td>
+        <td>${i.catIcone} ${i.catNome}</td>
+        <td><span class="grav-chip ${i.crit}">${i.crit === 'alta' ? 'Alta' : i.crit === 'media' ? 'Média' : 'Baixa'}</span></td>
+        <td>Em aberto</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderManual(){
+    const body = document.getElementById('nc-manual-body');
+    if(ncManual.length === 0){
+      body.innerHTML = `<tr><td colspan="4" class="nc-empty">Nenhuma ocorrência registrada manualmente.</td></tr>`;
+      return;
+    }
+    body.innerHTML = ncManual.map(n => `
+      <tr>
+        <td>${n.texto}</td>
+        <td><span class="grav-chip ${n.gravidade}">${n.gravidade === 'alta' ? 'Alta' : n.gravidade === 'media' ? 'Média' : 'Baixa'}</span></td>
+        <td>
+          <select class="nc-status-select" data-id="${n.id}">
+            <option ${n.status==='Aberta'?'selected':''}>Aberta</option>
+            <option ${n.status==='Em análise'?'selected':''}>Em análise</option>
+            <option ${n.status==='Resolvida'?'selected':''}>Resolvida</option>
+          </select>
+        </td>
+        <td><button class="nc-del" data-id="${n.id}">✕</button></td>
+      </tr>
+    `).join('');
+    body.querySelectorAll('.nc-status-select').forEach(sel => {
+      sel.addEventListener('change', (e) => {
+        const id = e.target.getAttribute('data-id');
+        const item = ncManual.find(n => n.id === id);
+        if(item){ item.status = e.target.value; salvarJSON(K_NC, ncManual); renderSidebar(); }
+      });
+    });
+    body.querySelectorAll('.nc-del').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.target.getAttribute('data-id');
+        ncManual = ncManual.filter(n => n.id !== id);
+        salvarJSON(K_NC, ncManual);
+        renderManual();
+        renderSidebar();
+      });
+    });
+  }
+  renderManual();
+
+  document.getElementById('nc-add').addEventListener('click', () => {
+    const texto = document.getElementById('nc-texto').value.trim();
+    if(!texto) return;
+    const gravidade = document.getElementById('nc-gravidade').value;
+    ncManual.unshift({ id: 'nc'+Date.now(), texto, gravidade, status: 'Aberta' });
+    salvarJSON(K_NC, ncManual);
+    document.getElementById('nc-texto').value = '';
+    renderManual();
+    renderSidebar();
+  });
+}
+
+// =====================================================================
+// INICIALIZAÇÃO
+// =====================================================================
+renderSidebar();
+renderMain();
+</script>
+
+</body>
+</html>
