@@ -89,11 +89,16 @@
     box-shadow: 0 2px 20px rgba(0,0,0,.15);
     z-index: 3;
   }
-  .theme-toggle{
+  .topbar-actions{
     position:absolute;
     right:24px;
     top:50%;
     transform:translateY(-50%);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .theme-toggle{
     display:flex;
     align-items:center;
     justify-content:center;
@@ -104,12 +109,34 @@
     background:transparent;
     color:var(--text);
     cursor:pointer;
+    flex-shrink:0;
     transition: background-color .15s ease, border-color .15s ease;
   }
   .theme-toggle:hover{ background: var(--hover-tint); }
   .theme-toggle svg{ width:18px; height:18px; }
   .theme-toggle .icon-moon{ display:none; }
-  @media (max-width: 800px){ .theme-toggle{ right:14px; } }
+  .btn-relatorio{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    height:38px;
+    padding: 0 14px;
+    border-radius:9px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:var(--text);
+    font-size:.8rem;
+    font-weight:700;
+    cursor:pointer;
+    white-space:nowrap;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-relatorio:hover{ background: var(--hover-tint); border-color: var(--red-bright); color: var(--red-bright); }
+  @media (max-width: 800px){
+    .topbar-actions{ right:14px; }
+    .btn-relatorio-txt{ display:none; }
+    .btn-relatorio{ padding:0 10px; }
+  }
   .topbar-app .logo-wrap{
     grid-column:1;
     display:flex;
@@ -359,6 +386,7 @@
   .item-card.checked .item-check{ background: linear-gradient(135deg, var(--red-dark), var(--red-bright)); border-color: var(--red-bright); }
   .item-texto{ flex:1; font-size:.9rem; line-height:1.4; color: var(--text); }
   .item-card.checked .item-texto{ text-decoration: line-through; color: var(--text-dim); }
+  .item-ts{ margin-top:3px; font-size:.72rem; text-decoration:none; color: var(--green); font-weight:600; }
   .crit-dot{ flex-shrink:0; font-size:.7rem; margin-top:3px; }
   .chevron{ flex-shrink:0; color: var(--text-dim); font-size:.7rem; margin-top:3px; transition: transform .15s; user-select:none; }
   .item-card.aberto .chevron{ transform: rotate(90deg); }
@@ -519,6 +547,44 @@
     .main{ padding: 20px 18px 50px; height:auto; overflow-y:visible; }
     .main-inner{ max-width:100%; }
   }
+
+  /* ---------- Relatório para impressão / PDF ---------- */
+  #relatorio-impressao{ display:none; }
+  .rel-header{ display:flex; align-items:center; justify-content:space-between; border-bottom:3px solid #b4192a; padding-bottom:14px; margin-bottom:18px; }
+  .rel-header .rel-brand{ font-size:1.3rem; font-weight:800; color:#1a1a1a; }
+  .rel-header .rel-brand span{ color:#b4192a; }
+  .rel-header .rel-meta{ text-align:right; font-size:.78rem; color:#444; line-height:1.5; }
+  .rel-resumo{ display:flex; gap:14px; margin-bottom:22px; flex-wrap:wrap; }
+  .rel-resumo-card{ flex:1; min-width:130px; border:1px solid #ccc; border-radius:8px; padding:10px 14px; }
+  .rel-resumo-card .n{ font-size:1.3rem; font-weight:800; color:#1a1a1a; }
+  .rel-resumo-card .l{ font-size:.7rem; text-transform:uppercase; letter-spacing:.4px; color:#777; }
+  .rel-cat{ margin-bottom:20px; page-break-inside:avoid; }
+  .rel-cat h3{ font-size:.98rem; font-weight:800; color:#1a1a1a; border-left:4px solid #b4192a; padding-left:8px; margin:0 0 8px; }
+  .rel-cat .rel-freq{ font-size:.7rem; color:#777; font-weight:700; text-transform:uppercase; margin-left:6px; }
+  table.rel-table{ width:100%; border-collapse:collapse; font-size:.78rem; margin-bottom:6px; }
+  table.rel-table th{ text-align:left; background:#f2f2f2; color:#333; font-size:.68rem; text-transform:uppercase; padding:6px 8px; border:1px solid #ddd; }
+  table.rel-table td{ padding:6px 8px; border:1px solid #ddd; vertical-align:top; color:#222; }
+  .rel-ok{ color:#1f8a4c; font-weight:800; }
+  .rel-nok{ color:#b4192a; font-weight:800; }
+  .rel-crit-alta{ color:#b4192a; font-weight:700; }
+  .rel-crit-media{ color:#a67200; font-weight:700; }
+  .rel-crit-baixa{ color:#777; font-weight:700; }
+  .rel-nc-section h3{ font-size:1rem; font-weight:800; color:#b4192a; margin: 24px 0 10px; border-bottom:1px solid #ddd; padding-bottom:6px; }
+  .rel-footer{ margin-top:26px; padding-top:12px; border-top:1px solid #ccc; font-size:.68rem; color:#888; }
+
+  @media print{
+    body *{ visibility:hidden; }
+    #relatorio-impressao, #relatorio-impressao *{ visibility:visible; }
+    #relatorio-impressao{
+      display:block;
+      position:absolute;
+      top:0; left:0; width:100%;
+      background:#fff;
+      color:#000;
+      padding: 10px 6px;
+    }
+    @page{ margin: 16mm 12mm; }
+  }
 </style>
 </head>
 <body class="light">
@@ -539,11 +605,18 @@
     <div class="titulo-principal">CHECKLIST DE ROTINA</div>
     <div class="titulo-descricao">Conferência diária de conformidade com base em RDCs, portarias e boas práticas farmacêuticas</div>
   </div>
-  <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro">
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-  </button>
+  <div class="topbar-actions">
+    <button class="btn-relatorio" onclick="gerarRelatorioPDF()" title="Gerar relatório em PDF" aria-label="Gerar relatório em PDF">
+      🖨️ <span class="btn-relatorio-txt">Relatório PDF</span>
+    </button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+    </button>
+  </div>
 </div>
+
+<div id="relatorio-impressao"></div>
 
 <div class="app-body">
   <div class="sidebar">
@@ -797,10 +870,27 @@ function carregarJSON(key, padrao){
 }
 function salvarJSON(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
 
-let estado = carregarJSON(K_STATE, {});         // { itemId: true/false }
+let estado = carregarJSON(K_STATE, {});         // { itemId: { checked: bool, ts: ISOString|null } }
 let historico = carregarJSON(K_HIST, []);       // [{data, percentual}]
 let ncManual = carregarJSON(K_NC, []);          // [{id, texto, gravidade, status}]
 let lastReset = carregarJSON(K_RESET, {});      // { diario:'YYYY-MM-DD', semanal:'YYYY-Www', mensal:'YYYY-MM' }
+
+// migração de formato antigo (booleano) para o novo formato {checked, ts}
+Object.keys(estado).forEach(id => {
+  if(typeof estado[id] === 'boolean'){
+    estado[id] = { checked: estado[id], ts: estado[id] ? new Date().toISOString() : null };
+  }
+});
+
+function estaMarcado(id){ return !!(estado[id] && estado[id].checked); }
+function marcarItem(id, valor){
+  estado[id] = { checked: valor, ts: valor ? new Date().toISOString() : null };
+}
+function dataHoraFormatada(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+}
 
 let categoriaAtual = null; // null = dashboard, 'nc' = não conformidades
 
@@ -819,13 +909,13 @@ function mesISO(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padSta
 function percentualPeriodo(freq){
   const itens = TODOS_ITENS.filter(i => DATA.categorias.find(c=>c.id===i.catId).freq === freq);
   if(itens.length === 0) return 0;
-  const marcados = itens.filter(i => estado[i.id]).length;
+  const marcados = itens.filter(i => estaMarcado(i.id)).length;
   return Math.round((marcados/itens.length)*100);
 }
 
 function resetarPeriodo(freq){
   DATA.categorias.filter(c => c.freq === freq).forEach(c => {
-    c.itens.forEach(i => { estado[i.id] = false; });
+    c.itens.forEach(i => { marcarItem(i.id, false); });
   });
 }
 
@@ -870,11 +960,11 @@ function toggleTheme(){
 // =====================================================================
 function contagemCategoria(cat){
   const total = cat.itens.length;
-  const marcados = cat.itens.filter(i => estado[i.id]).length;
+  const marcados = cat.itens.filter(i => estaMarcado(i.id)).length;
   return { total, marcados };
 }
 function contarNaoConformidadesAbertas(){
-  const autoAbertas = TODOS_ITENS.filter(i => (i.crit === 'alta' || i.crit === 'media') && !estado[i.id]).length;
+  const autoAbertas = TODOS_ITENS.filter(i => (i.crit === 'alta' || i.crit === 'media') && !estaMarcado(i.id)).length;
   const manualAbertas = ncManual.filter(n => n.status !== 'Resolvida').length;
   return autoAbertas + manualAbertas;
 }
@@ -949,7 +1039,7 @@ document.getElementById('busca').addEventListener('input', e => renderSidebar(e.
 // =====================================================================
 function statusCategoria(cat){
   const { total, marcados } = contagemCategoria(cat);
-  const altasAbertas = cat.itens.filter(i => i.crit === 'alta' && !estado[i.id]).length;
+  const altasAbertas = cat.itens.filter(i => i.crit === 'alta' && !estaMarcado(i.id)).length;
   if(altasAbertas > 0) return { classe:'critico', label:'🔴 Não Conforme' };
   if(marcados < total) return { classe:'atencao', label:'🟡 Atenção' };
   return { classe:'ok', label:'🟢 Conforme' };
@@ -995,7 +1085,8 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
 
   const grid = document.getElementById('itens-grid');
   cat.itens.forEach(item => {
-    const checked = !!estado[item.id];
+    const checked = estaMarcado(item.id);
+    const ts = estado[item.id] ? estado[item.id].ts : null;
     const abrirEsse = abrirItem && item.id === itemIdParaAbrir;
     const dot = item.crit === 'alta' ? '🔴' : item.crit === 'media' ? '🟡' : '🟢';
     const card = document.createElement('div');
@@ -1003,7 +1094,7 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
     card.innerHTML = `
       <div class="item-main">
         <div class="item-check" data-role="check">${checked ? '✓' : ''}</div>
-        <div class="item-texto">${item.texto}</div>
+        <div class="item-texto">${item.texto}${checked ? `<div class="item-ts">✔ conferido em ${dataHoraFormatada(ts)}</div>` : ''}</div>
         <div class="crit-dot">${dot}</div>
         <div class="chevron" data-role="chevron">▶</div>
       </div>
@@ -1015,7 +1106,7 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
     `;
     card.querySelector('[data-role="check"]').addEventListener('click', (ev) => {
       ev.stopPropagation();
-      estado[item.id] = !estado[item.id];
+      marcarItem(item.id, !estaMarcado(item.id));
       salvarJSON(K_STATE, estado);
       renderSidebar(document.getElementById('busca').value);
       renderMain();
@@ -1028,7 +1119,7 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
 
   document.getElementById('btn-reset-cat').addEventListener('click', () => {
     if(!confirm(`Reiniciar todos os itens de "${cat.nome}"?`)) return;
-    cat.itens.forEach(i => { estado[i.id] = false; });
+    cat.itens.forEach(i => { marcarItem(i.id, false); });
     salvarJSON(K_STATE, estado);
     renderSidebar();
     renderMain();
@@ -1043,7 +1134,7 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
 // ---------- Dashboard ----------
 function renderDashboard(el){
   const totalGeral = TODOS_ITENS.length;
-  const marcadosGeral = TODOS_ITENS.filter(i => estado[i.id]).length;
+  const marcadosGeral = TODOS_ITENS.filter(i => estaMarcado(i.id)).length;
   const pctGeral = totalGeral ? Math.round((marcadosGeral/totalGeral)*100) : 0;
   const ncAbertas = contarNaoConformidadesAbertas();
 
@@ -1108,7 +1199,7 @@ function renderDashboard(el){
 
 // ---------- Painel de Não Conformidades ----------
 function renderNaoConformidades(el){
-  const autoAbertas = TODOS_ITENS.filter(i => (i.crit === 'alta' || i.crit === 'media') && !estado[i.id]);
+  const autoAbertas = TODOS_ITENS.filter(i => (i.crit === 'alta' || i.crit === 'media') && !estaMarcado(i.id));
 
   el.innerHTML = `
     <div class="main-header">
@@ -1204,6 +1295,92 @@ function renderNaoConformidades(el){
     renderManual();
     renderSidebar();
   });
+}
+
+// =====================================================================
+// RELATÓRIO PDF (via impressão do navegador)
+// =====================================================================
+function gerarRelatorioPDF(){
+  const agora = new Date();
+  const emitidoEm = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+
+  const totalGeral = TODOS_ITENS.length;
+  const marcadosGeral = TODOS_ITENS.filter(i => estaMarcado(i.id)).length;
+  const pctGeral = totalGeral ? Math.round((marcadosGeral/totalGeral)*100) : 0;
+  const naoConformesGeral = totalGeral - marcadosGeral;
+
+  const rotuloCrit = { alta:'Alta', media:'Média', baixa:'Baixa' };
+
+  let html = `
+    <div class="rel-header">
+      <div class="rel-brand">Farma<span>Prática</span> — Relatório de Checklist de Rotina</div>
+      <div class="rel-meta">
+        Relatório emitido em: <strong>${emitidoEm}</strong><br>
+        Estabelecimento: ______________________________<br>
+        Responsável técnico: ______________________________
+      </div>
+    </div>
+
+    <div class="rel-resumo">
+      <div class="rel-resumo-card"><div class="n">${totalGeral}</div><div class="l">Itens verificados</div></div>
+      <div class="rel-resumo-card"><div class="n rel-ok">${marcadosGeral}</div><div class="l">Conformidades</div></div>
+      <div class="rel-resumo-card"><div class="n rel-nok">${naoConformesGeral}</div><div class="l">Não conformidades</div></div>
+      <div class="rel-resumo-card"><div class="n">${pctGeral}%</div><div class="l">Conformidade geral</div></div>
+    </div>
+  `;
+
+  DATA.categorias.forEach(cat => {
+    html += `<div class="rel-cat">
+      <h3>${cat.icone} ${cat.nome}<span class="rel-freq">(${DATA.freqLabel[cat.freq]})</span></h3>
+      <table class="rel-table">
+        <thead><tr><th style="width:46%">Item</th><th style="width:10%">Criticidade</th><th style="width:14%">Status</th><th style="width:30%">Conferido em</th></tr></thead>
+        <tbody>`;
+    cat.itens.forEach(item => {
+      const ok = estaMarcado(item.id);
+      const ts = estado[item.id] ? estado[item.id].ts : null;
+      html += `<tr>
+        <td>${item.texto}</td>
+        <td class="rel-crit-${item.crit}">${rotuloCrit[item.crit]}</td>
+        <td class="${ok ? 'rel-ok' : 'rel-nok'}">${ok ? '✔ Conforme' : '✘ Não conforme'}</td>
+        <td>${ok ? dataHoraFormatada(ts) : '—'}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+
+  // Não conformidades automáticas
+  const autoAbertas = TODOS_ITENS.filter(i => (i.crit === 'alta' || i.crit === 'media') && !estaMarcado(i.id));
+  html += `<div class="rel-nc-section"><h3>🚨 Não Conformidades Detectadas (itens não conferidos)</h3>`;
+  if(autoAbertas.length === 0){
+    html += `<p style="font-size:.8rem;color:#444;">Nenhuma pendência de criticidade alta ou média em aberto no momento da emissão.</p>`;
+  } else {
+    html += `<table class="rel-table"><thead><tr><th>Ocorrência</th><th>Rotina</th><th>Gravidade</th></tr></thead><tbody>`;
+    autoAbertas.forEach(i => {
+      html += `<tr><td>${i.texto}</td><td>${i.catIcone} ${i.catNome}</td><td class="rel-crit-${i.crit}">${rotuloCrit[i.crit]}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+  }
+  html += `</div>`;
+
+  // Não conformidades manuais
+  html += `<div class="rel-nc-section"><h3>📝 Ocorrências Registradas Manualmente</h3>`;
+  if(ncManual.length === 0){
+    html += `<p style="font-size:.8rem;color:#444;">Nenhuma ocorrência manual registrada.</p>`;
+  } else {
+    html += `<table class="rel-table"><thead><tr><th>Ocorrência</th><th>Gravidade</th><th>Status</th></tr></thead><tbody>`;
+    ncManual.forEach(n => {
+      html += `<tr><td>${n.texto}</td><td class="rel-crit-${n.gravidade}">${rotuloCrit[n.gravidade]}</td><td>${n.status}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+  }
+  html += `</div>`;
+
+  html += `<div class="rel-footer">
+    Relatório gerado automaticamente pela ferramenta de Checklist de Rotina do FarmaPrática. As datas de conferência refletem o último registro salvo no navegador utilizado; itens diários, semanais e mensais são reiniciados automaticamente ao final de cada período. Este documento é um instrumento de apoio interno e não substitui os registros oficiais exigidos pela legislação sanitária vigente.
+  </div>`;
+
+  document.getElementById('relatorio-impressao').innerHTML = html;
+  window.print();
 }
 
 // =====================================================================
