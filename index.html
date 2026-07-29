@@ -374,6 +374,8 @@
   .btn-ghost:hover{ background: var(--hover-tint); border-color: var(--red-bright); color: var(--red-bright); transform: translateY(-1px); }
   .btn-ghost.primario{ border-color: var(--green); color: var(--green); }
   .btn-ghost.primario:hover{ background: rgba(53,181,106,.1); border-color: var(--green); color: var(--green); }
+  .btn-ghost.perigo{ border-color: var(--red-bright); color: var(--red-bright); }
+  .btn-ghost.perigo:hover{ background: rgba(239,45,64,.12); border-color: var(--red-bright); color: var(--red-bright); }
 
   /* ---------- Barra de progresso ---------- */
   .resumo-bar{
@@ -1584,6 +1586,9 @@ function renderDashboard(el){
         <h2>📊 Visão Geral da Rotina</h2>
         <div class="tags-row"><span class="cat-tag">${new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'2-digit', month:'long' })}</span></div>
       </div>
+      <div class="main-header-actions">
+        <button class="btn-ghost perigo" id="btn-reset-tudo">🗑️ Reiniciar Tudo</button>
+      </div>
     </div>
 
     <div class="dash-resumo-global">
@@ -1635,6 +1640,27 @@ function renderDashboard(el){
       return `<div class="historico-linha"><span class="hd">${label}</span><span class="hp" style="color:${cor}">${h.percentual}%</span></div>`;
     }).join('');
   }
+
+  document.getElementById('btn-reset-tudo').addEventListener('click', reiniciarTudo);
+}
+
+function reiniciarTudo(){
+  const confirmacao = confirm(
+    'Reiniciar TODA a checklist de rotina?\n\n' +
+    'Isso vai desmarcar todos os itens de todas as rotinas (diárias, semanais e mensais) ' +
+    'e apagar as ocorrências registradas manualmente no painel de Não Conformidades.\n\n' +
+    'O histórico de dias anteriores será mantido.\n\n' +
+    'Esta ação não pode ser desfeita. Deseja continuar?'
+  );
+  if(!confirmacao) return;
+
+  TODOS_ITENS.forEach(i => { marcarItem(i.id, false); });
+  ncManual = [];
+  salvarJSON(K_STATE, estado);
+  salvarJSON(K_NC, ncManual);
+
+  renderSidebar();
+  renderMain();
 }
 
 // ---------- Painel de Não Conformidades ----------
