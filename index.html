@@ -26,6 +26,7 @@
     --pill-bg: #33232a;
     --pill-text: #f6cf74;
     --green: #35b56a;
+    --blue: #6fa8dc;
     --sidebar-w: 300px;
     --hover-tint: rgba(255,255,255,.06);
   }
@@ -49,11 +50,11 @@
     --pill-bg: #fbe9ea;
     --pill-text: #a10f1f;
     --green: #1f8a4c;
+    --blue: #2a6db3;
     --hover-tint: rgba(0,0,0,.04);
   }
   body.light .cat-item:hover{ color:#000; }
   body.light .empty-icon{ background: linear-gradient(135deg, rgba(161,15,31,.12), rgba(232,184,75,.12)); }
-  body.light .valor-pill{ background: linear-gradient(135deg, #fdf0d8, var(--pill-bg)); border-color: rgba(161,15,31,.25); }
   body.light .resumo-bar{ background: linear-gradient(135deg, rgba(161,15,31,.06), rgba(232,184,75,.05)); }
   body.light .theme-toggle .icon-sun{ display:none; }
   body.light .theme-toggle .icon-moon{ display:block; }
@@ -215,12 +216,32 @@
     border-radius:9px;
     padding: 8px 10px;
     transition: border-color .15s ease, box-shadow .15s ease;
+    margin-bottom: 10px;
   }
   .search-box:focus-within{ border-color: var(--red-bright); box-shadow: 0 0 0 3px var(--red-glow); }
   .search-box input{
     background:transparent; border:none; outline:none;
     color:var(--text); font-size:.85rem; width:100%;
   }
+  .btn-fonte-dados{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    width:100%;
+    padding: 10px 12px;
+    border-radius:9px;
+    border: 1px solid rgba(242,184,75,.4);
+    background: linear-gradient(135deg, rgba(242,184,75,.14), rgba(180,25,42,.08));
+    color: var(--amber);
+    font-size:.82rem;
+    font-weight:800;
+    cursor:pointer;
+    letter-spacing:.2px;
+    transition: transform .1s ease, background .15s ease;
+  }
+  .btn-fonte-dados:hover{ transform: translateY(-1px); background: linear-gradient(135deg, rgba(242,184,75,.22), rgba(180,25,42,.12)); }
+  .btn-fonte-dados.active{ background: linear-gradient(135deg, var(--red-dark), var(--red)); color:#fff; border-color: transparent; }
   .sidebar-list{ flex:1; overflow-y:auto; padding: 4px 10px 20px; }
   .cat-header{
     font-size:.72rem;
@@ -288,6 +309,7 @@
   }
   .main-header h2{ margin:0; font-size: 1.6rem; letter-spacing:-.2px; display:flex; align-items:center; gap:10px; }
   .main-header .tags-row{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .main-header-actions{ display:flex; gap:8px; flex-wrap:wrap; }
   .cat-tag{
     display:inline-block;
     font-size:.68rem;
@@ -332,6 +354,8 @@
     transition: background .15s, transform .1s, border-color .15s;
   }
   .btn-ghost:hover{ background: var(--hover-tint); border-color: var(--red-bright); color: var(--red-bright); transform: translateY(-1px); }
+  .btn-ghost.primario{ border-color: var(--green); color: var(--green); }
+  .btn-ghost.primario:hover{ background: rgba(53,181,106,.1); border-color: var(--green); color: var(--green); }
 
   /* ---------- Barra de progresso ---------- */
   .resumo-bar{
@@ -397,10 +421,33 @@
     border-top: 1px solid var(--border);
   }
   .item-card.aberto .item-detail{ display:block; }
-  .item-detail .linha{ display:flex; gap:8px; font-size:.8rem; line-height:1.55; color: var(--text-gray); margin-bottom:8px; }
-  .item-detail .linha:last-child{ margin-bottom:0; }
+  .item-detail .linha{ display:flex; gap:8px; font-size:.8rem; line-height:1.55; color: var(--text-gray); margin-bottom:10px; }
   .item-detail .linha .rotulo{ flex-shrink:0; font-weight:800; color: var(--text); min-width:96px; }
   .item-detail .linha.correcao .rotulo{ color: var(--red-bright); }
+  .normas-wrap{ margin-top:2px; }
+  .normas-wrap .rotulo{ display:block; font-weight:800; color: var(--text); font-size:.8rem; margin-bottom:8px; }
+  .norma-card{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: .78rem;
+    line-height: 1.55;
+  }
+  .norma-card:last-child{ margin-bottom:0; }
+  .norma-card .norma-titulo{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:4px; }
+  .norma-card .norma-sigla{ font-weight:800; color: var(--blue); }
+  .norma-card .norma-orgao{ font-size:.66rem; text-transform:uppercase; letter-spacing:.4px; color: var(--text-dim); font-weight:700; }
+  .norma-card .norma-nome{ color: var(--text); font-weight:600; margin-bottom:4px; }
+  .norma-card .norma-contexto{ color: var(--text-gray); }
+  .norma-card .norma-link{
+    display:inline-flex; align-items:center; gap:5px;
+    margin-top:6px; font-size:.72rem; font-weight:700;
+    color: var(--red-bright); text-decoration:none;
+  }
+  .norma-card .norma-link:hover{ text-decoration:underline; }
 
   .fonte-tag{
     margin-top: 20px;
@@ -415,6 +462,34 @@
     border-radius: 20px;
   }
   .fonte-tag b{ color: var(--text); }
+
+  /* ---------- Painel Fonte de Dados ---------- */
+  .fonte-grupo{ margin-bottom: 22px; }
+  .fonte-grupo h3{ font-size:.85rem; font-weight:800; color: var(--amber); text-transform:uppercase; letter-spacing:.5px; margin: 0 0 10px; }
+  .fonte-item{
+    background: var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding: 14px 16px;
+    margin-bottom:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .fonte-item .fi-main{ flex:1; min-width:220px; }
+  .fonte-item .fi-sigla{ font-weight:800; color: var(--blue); font-size:.9rem; }
+  .fonte-item .fi-titulo{ font-size:.84rem; color: var(--text); font-weight:600; margin:3px 0; }
+  .fonte-item .fi-contexto{ font-size:.78rem; color: var(--text-gray); line-height:1.5; }
+  .fonte-item .fi-link{
+    display:inline-flex; align-items:center; gap:6px;
+    border:1px solid var(--red-bright); color: var(--red-bright);
+    background:transparent; padding: 7px 14px; border-radius:20px;
+    font-size:.76rem; font-weight:700; text-decoration:none; white-space:nowrap;
+    transition: background .15s;
+  }
+  .fonte-item .fi-link:hover{ background: rgba(239,45,64,.1); }
 
   /* ---------- Dashboard ---------- */
   .dash-resumo-global{
@@ -625,6 +700,9 @@
         <span>🔍</span>
         <input type="text" id="busca" placeholder="Buscar item do checklist...">
       </div>
+      <button class="btn-fonte-dados" id="btn-fonte-dados" onclick="abrirFontesDados()">
+        📚 Fonte de Dados
+      </button>
     </div>
     <div class="sidebar-list" id="lista-categorias"></div>
   </div>
@@ -638,6 +716,78 @@
 
 <script>
 // =====================================================================
+// NORMAS: base normativa reutilizável, com explicação de origem/escopo
+// =====================================================================
+const NORMAS = {
+  rdc44_2009: {
+    tipo: 'RDC', numero: 'nº 44/2009', orgao: 'Anvisa',
+    titulo: 'Boas Práticas Farmacêuticas para farmácias e drogarias',
+    contexto: 'Publicada pela Anvisa em 2009, é a norma-base que estabelece os critérios mínimos de funcionamento, dispensação, comercialização e prestação de serviços farmacêuticos em farmácias e drogarias em todo o Brasil.',
+    link: 'https://bvsms.saude.gov.br/bvs/saudelegis/anvisa/2009/rdc0044_17_08_2009.html'
+  },
+  rdc430_2020: {
+    tipo: 'RDC', numero: 'nº 430/2020', orgao: 'Anvisa',
+    titulo: 'Boas Práticas de Distribuição, Armazenagem e Transporte de Medicamentos',
+    contexto: 'Publicada em 2020, substituiu normas anteriores (RDC 304/2019 e Portaria 802/1998) para detalhar as exigências de temperatura, umidade, recebimento e transporte ao longo de toda a cadeia de distribuição de medicamentos.',
+    link: 'https://anvisalegis.datalegis.net/action/ActionDatalegis.php?acao=abrirTextoAto&tipo=RDC&numeroAto=00000430&seqAto=000&valorAno=2020&orgao=RDC%2FDC%2FANVISA%2FMS&cod_modulo=310&cod_menu=8542'
+  },
+  portaria344_1998: {
+    tipo: 'Portaria', numero: 'SVS/MS nº 344/1998', orgao: 'Ministério da Saúde / Anvisa',
+    titulo: 'Regulamento Técnico sobre substâncias e medicamentos sujeitos a controle especial',
+    contexto: 'Editada em 1998 pela então Secretaria de Vigilância Sanitária, é a norma histórica que classifica as substâncias controladas (listas A, B, C etc.) e disciplina prescrição, dispensação, escrituração e armazenamento desses medicamentos. Recebe atualizações periódicas por RDCs da Anvisa.',
+    link: 'https://bvsms.saude.gov.br/bvs/saudelegis/svs/1998/prt0344_12_05_1998_rep.html'
+  },
+  rdc22_2014: {
+    tipo: 'RDC', numero: 'nº 22/2014', orgao: 'Anvisa',
+    titulo: 'Sistema Nacional de Gerenciamento de Produtos Controlados (SNGPC)',
+    contexto: 'Publicada em 2014, revogou a RDC 27/2007 e passou a regulamentar o SNGPC — o sistema obrigatório de escrituração eletrônica de medicamentos controlados usado por farmácias e drogarias, definindo prazos de transmissão, guarda de dados e responsabilidades do farmacêutico.',
+    link: 'https://portal.crfsp.org.br/325-legislacao/5508-resolucao-rdc-22-de-29-de-abril-de-2014-anvisa.html'
+  },
+  lei13021_2014: {
+    tipo: 'Lei Federal', numero: 'nº 13.021/2014', orgao: 'Presidência da República',
+    titulo: 'Exercício e fiscalização das atividades farmacêuticas',
+    contexto: 'Sancionada em 2014, é conhecida como "Farmácia Estabelecimento de Saúde": elevou a farmácia à condição de unidade de prestação de serviços de saúde (não apenas comércio) e tornou obrigatória a presença do farmacêutico durante todo o horário de funcionamento.',
+    link: 'http://www.planalto.gov.br/ccivil_03/_Ato2011-2014/2014/Lei/L13021.htm'
+  },
+  lei5991_1973: {
+    tipo: 'Lei Federal', numero: 'nº 5.991/1973', orgao: 'Presidência da República',
+    titulo: 'Controle sanitário do comércio de drogas, medicamentos, insumos farmacêuticos e correlatos',
+    contexto: 'Lei de 1973 que até hoje fundamenta o controle sanitário do comércio farmacêutico no Brasil, incluindo a exigência de licença sanitária, responsabilidade técnica e as regras gerais de funcionamento de farmácias.',
+    link: 'http://www.planalto.gov.br/ccivil_03/leis/l5991.htm'
+  },
+  lei6360_1976: {
+    tipo: 'Lei Federal', numero: 'nº 6.360/1976', orgao: 'Presidência da República',
+    titulo: 'Vigilância sanitária de medicamentos, drogas, insumos farmacêuticos e correlatos',
+    contexto: 'Lei de 1976 que instituiu o regime de vigilância sanitária federal sobre medicamentos, sendo a base legal da exigência de Autorização de Funcionamento de Empresa (AFE) concedida pela Anvisa.',
+    link: 'http://www.planalto.gov.br/ccivil_03/leis/l6360.htm'
+  },
+  rdc222_2018: {
+    tipo: 'RDC', numero: 'nº 222/2018', orgao: 'Anvisa',
+    titulo: 'Boas Práticas de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS)',
+    contexto: 'Publicada em 2018 em substituição à RDC 306/2004, exige que todo estabelecimento de saúde — incluindo farmácias que prestam serviços clínicos — mantenha um Plano de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS), com regras de segregação, acondicionamento e descarte.',
+    link: 'https://www.gov.br/anvisa/pt-br/assuntos/servicosdesaude/gerenciamento-de-residuos'
+  },
+  rdc978_2025: {
+    tipo: 'RDC', numero: 'nº 978/2025', orgao: 'Anvisa',
+    titulo: 'Requisitos técnico-sanitários para Serviços que executam Exames de Análises Clínicas (EAC)',
+    contexto: 'Publicada em junho de 2025, revogou e substituiu a RDC 786/2023 (que havia autorizado, em 2023, a realização de testes rápidos de triagem em farmácias). É a norma vigente que disciplina quais exames a farmácia pode oferecer como "Serviço Tipo I" e sob quais condições técnicas.',
+    link: 'https://anvisalegis.datalegis.net/action/ActionDatalegis.php?acao=abrirTextoAto&tipo=RDC&numeroAto=00000978&seqAto=000&valorAno=2025&orgao=RDC%2FDC%2FANVISA%2FMS&codTipo=&desItem=&desItemFim=&cod_menu=1696&cod_modulo=134&pesquisa=true'
+  },
+  resolucaocff585_2013: {
+    tipo: 'Resolução CFF', numero: 'nº 585/2013', orgao: 'Conselho Federal de Farmácia',
+    titulo: 'Atribuições clínicas do farmacêutico',
+    contexto: 'Editada em 2013 pelo CFF (não pela Anvisa), regulamenta as atribuições clínicas do farmacêutico — consultas, acompanhamento farmacoterapêutico, aferições e demais serviços de cuidado à saúde prestados em farmácias.',
+    link: 'https://www.cff.org.br/userfiles/file/resolucoes/585.pdf'
+  },
+  nr32: {
+    tipo: 'Norma Regulamentadora', numero: 'NR-32', orgao: 'Ministério do Trabalho e Emprego',
+    titulo: 'Segurança e Saúde no Trabalho em Serviços de Saúde',
+    contexto: 'Norma trabalhista (não sanitária) publicada em 2005 pelo então Ministério do Trabalho, com o objetivo de proteger os trabalhadores da saúde de riscos biológicos, químicos e físicos, incluindo regras de descarte de perfurocortantes.',
+    link: 'https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-32-nr-32'
+  }
+};
+
+// =====================================================================
 // DADOS: categorias e itens do checklist
 // =====================================================================
 const DATA = {
@@ -649,24 +799,24 @@ const DATA = {
       itens: [
         { id:'t1', texto:'Temperatura da geladeira de medicamentos aferida e registrada (2–8 °C)', crit:'alta',
           motivo:'Medicamentos termolábeis (insulinas, alguns colírios, imunobiológicos) perdem estabilidade físico-química fora da faixa recomendada, comprometendo eficácia e segurança.',
-          legal:'RDC nº 44/2009 (Boas Práticas Farmacêuticas) e RDC nº 430/2020 (armazenagem e transporte de medicamentos).',
-          correcao:'Isolar os produtos armazenados fora da faixa, registrar a ocorrência, avaliar estabilidade com o farmacêutico responsável antes de liberar para dispensação.' },
+          correcao:'Isolar os produtos armazenados fora da faixa, registrar a ocorrência, avaliar estabilidade com o farmacêutico responsável antes de liberar para dispensação.',
+          normas:['rdc44_2009','rdc430_2020'] },
         { id:'t2', texto:'Temperatura ambiente da área de armazenamento dentro do especificado em bula', crit:'media',
           motivo:'Excipientes e formas farmacêuticas sólidas ou líquidas podem se degradar quando expostas a calor excessivo.',
-          legal:'RDC nº 44/2009 – condições ambientais de conservação de medicamentos.',
-          correcao:'Verificar climatização do ambiente, isolar lotes suspeitos de exposição térmica e registrar a não conformidade.' },
+          correcao:'Verificar climatização do ambiente, isolar lotes suspeitos de exposição térmica e registrar a não conformidade.',
+          normas:['rdc44_2009'] },
         { id:'t3', texto:'Umidade relativa do ambiente de armazenamento verificada', crit:'baixa',
           motivo:'Umidade elevada favorece degradação de comprimidos efervescentes, cápsulas e embalagens de papel/cartuchos.',
-          legal:'RDC nº 44/2009 – armazenamento de medicamentos.',
-          correcao:'Utilizar desumidificador ou ventilação adequada e reorganizar produtos sensíveis à umidade.' },
+          correcao:'Utilizar desumidificador ou ventilação adequada e reorganizar produtos sensíveis à umidade.',
+          normas:['rdc44_2009'] },
         { id:'t4', texto:'Equipamento de refrigeração funcionando corretamente (sem excesso de gelo, borracha de vedação íntegra)', crit:'media',
           motivo:'Falhas no equipamento comprometem a manutenção contínua da cadeia de frio.',
-          legal:'RDC nº 430/2020 – armazenagem e transporte.',
-          correcao:'Acionar manutenção do equipamento e transferir produtos para geladeira de backup, se disponível.' },
+          correcao:'Acionar manutenção do equipamento e transferir produtos para geladeira de backup, se disponível.',
+          normas:['rdc430_2020'] },
         { id:'t5', texto:'Plano de contingência para falha de refrigeração conhecido pela equipe', crit:'alta',
           motivo:'Resposta rápida evita perda de estabilidade de lotes inteiros em caso de pane elétrica ou falha do equipamento.',
-          legal:'RDC nº 430/2020 c/c RDC nº 44/2009.',
-          correcao:'Revisar/elaborar POP de contingência e testar periodicamente a disponibilidade de equipamento reserva.' }
+          correcao:'Revisar/elaborar POP de contingência e testar periodicamente a disponibilidade de equipamento reserva.',
+          normas:['rdc430_2020','rdc44_2009'] }
       ]
     },
     {
@@ -674,24 +824,24 @@ const DATA = {
       itens: [
         { id:'m1', texto:'Medicamentos vencidos identificados e retirados do estoque ativo', crit:'alta',
           motivo:'A dispensação de medicamento vencido constitui infração sanitária e risco direto à saúde do paciente.',
-          legal:'Lei nº 5.991/1973 (controle sanitário) e RDC nº 44/2009.',
-          correcao:'Segregar em área de quarentena, providenciar baixa e descarte conforme RDC nº 222/2018 e comunicar o RT.' },
+          correcao:'Segregar em área de quarentena, providenciar baixa e descarte conforme a RDC de resíduos e comunicar o RT.',
+          normas:['lei5991_1973','rdc44_2009'] },
         { id:'m2', texto:'Medicamentos próximos ao vencimento sinalizados para giro prioritário (FEFO)', crit:'media',
           motivo:'Antecipar o giro evita perdas por vencimento e reduz o risco de dispensação inadvertida de itens vencidos.',
-          legal:'RDC nº 44/2009 – organização e controle de estoque.',
-          correcao:'Aplicar FEFO (primeiro que vence, primeiro que sai) e avaliar troca/devolução junto ao distribuidor quando cabível.' },
+          correcao:'Aplicar FEFO (primeiro que vence, primeiro que sai) e avaliar troca/devolução junto ao distribuidor quando cabível.',
+          normas:['rdc44_2009'] },
         { id:'m3', texto:'Produtos com embalagem avariada, violada ou sem identificação isolados', crit:'alta',
           motivo:'Compromete a rastreabilidade do produto e pode indicar exposição a condições inadequadas.',
-          legal:'RDC nº 44/2009.',
-          correcao:'Retirar imediatamente da área de venda, registrar a ocorrência e avaliar descarte ou devolução.' },
+          correcao:'Retirar imediatamente da área de venda, registrar a ocorrência e avaliar descarte ou devolução.',
+          normas:['rdc44_2009'] },
         { id:'m4', texto:'Medicamentos fracionados/reembalados identificados com lote e validade', crit:'alta',
           motivo:'A ausência de identificação impede a rastreabilidade e a verificação do prazo de validade real.',
-          legal:'RDC nº 44/2009 – fracionamento de medicamentos.',
-          correcao:'Reidentificar imediatamente com lote e validade de origem ou descartar se a procedência não puder ser garantida.' },
+          correcao:'Reidentificar imediatamente com lote e validade de origem ou descartar se a procedência não puder ser garantida.',
+          normas:['rdc44_2009'] },
         { id:'m5', texto:'Medicamentos termolábeis conferidos quanto ao armazenamento correto (geladeira x prateleira)', crit:'alta',
           motivo:'Armazenamento fora da geladeira compromete a estabilidade de produtos termolábeis em poucas horas.',
-          legal:'RDC nº 430/2020.',
-          correcao:'Transferir imediatamente para refrigeração adequada e avaliar se houve perda de estabilidade.' }
+          correcao:'Transferir imediatamente para refrigeração adequada e avaliar se houve perda de estabilidade.',
+          normas:['rdc430_2020'] }
       ]
     },
     {
@@ -699,24 +849,24 @@ const DATA = {
       itens: [
         { id:'r1', texto:'Receitas de medicamentos sob controle especial conferidas quanto à validade do prazo', crit:'alta',
           motivo:'Receitas fora do prazo de validade não podem ser aviadas.',
-          legal:'Portaria SVS/MS nº 344/1998 – prazo de validade da receita conforme a lista de controle.',
-          correcao:'Recusar a dispensação e orientar o paciente a solicitar nova prescrição ao médico.' },
+          correcao:'Recusar a dispensação e orientar o paciente a solicitar nova prescrição ao médico.',
+          normas:['portaria344_1998'] },
         { id:'r2', texto:'Legibilidade e completude da prescrição (medicamento, concentração, posologia, quantidade e identificação do prescritor)', crit:'alta',
           motivo:'Prescrições incompletas ou ilegíveis aumentam o risco de erro de dispensação.',
-          legal:'Portaria SVS/MS nº 344/1998 e RDC nº 44/2009 (dispensação).',
-          correcao:'Contatar o prescritor para esclarecimento antes de dispensar; nunca presumir a informação faltante.' },
+          correcao:'Contatar o prescritor para esclarecimento antes de dispensar; nunca presumir a informação faltante.',
+          normas:['portaria344_1998','rdc44_2009'] },
         { id:'r3', texto:'Retenção da via exigida de Notificação de Receita, quando aplicável', crit:'alta',
           motivo:'A retenção documental é exigência legal para o controle de medicamentos sujeitos a controle especial.',
-          legal:'Portaria SVS/MS nº 344/1998.',
-          correcao:'Reter a via correta, carimbar e escriturar no SNGPC antes da entrega do medicamento.' },
+          correcao:'Reter a via correta, carimbar e escriturar no SNGPC antes da entrega do medicamento.',
+          normas:['portaria344_1998'] },
         { id:'r4', texto:'Orientação verbal sobre posologia, forma de uso e conservação registrada', crit:'media',
           motivo:'A orientação farmacêutica reduz erros de uso e reforça a adesão ao tratamento.',
-          legal:'RDC nº 44/2009 – atenção farmacêutica na dispensação.',
-          correcao:'Retomar a orientação ao paciente e registrar o atendimento no prontuário/sistema, quando disponível.' },
+          correcao:'Retomar a orientação ao paciente e registrar o atendimento no prontuário/sistema, quando disponível.',
+          normas:['rdc44_2009'] },
         { id:'r5', texto:'Prescrição digital validada (assinatura eletrônica íntegra e ausência de reuso indevido)', crit:'alta',
           motivo:'Prescrições eletrônicas fraudadas ou reutilizadas comprometem o controle sanitário.',
-          legal:'RDC nº 44/2009 c/c normas vigentes de prescrição eletrônica.',
-          correcao:'Validar a assinatura no verificador oficial antes de dispensar e registrar o número/hash da prescrição.' }
+          correcao:'Validar a assinatura no verificador oficial antes de dispensar e registrar o número/hash da prescrição.',
+          normas:['rdc44_2009'] }
       ]
     },
     {
@@ -724,24 +874,24 @@ const DATA = {
       itens: [
         { id:'c1', texto:'Armário/cofre de controlados mantido fechado, com chaves sob responsabilidade do RT ou substituto', crit:'alta',
           motivo:'O acesso restrito é exigência básica de segurança para produtos sujeitos a controle especial.',
-          legal:'Portaria SVS/MS nº 344/1998 – armazenamento.',
-          correcao:'Restabelecer o fechamento imediatamente e identificar o responsável pela guarda das chaves no turno.' },
-        { id:'c2', texto:'Escrituração (livro ou SNGPC eletrônico) atualizada com as entradas e saídas do dia', crit:'alta',
+          correcao:'Restabelecer o fechamento imediatamente e identificar o responsável pela guarda das chaves no turno.',
+          normas:['portaria344_1998'] },
+        { id:'c2', texto:'Escrituração (SNGPC eletrônico ou Livro de Registro Específico) atualizada com as entradas e saídas do dia', crit:'alta',
           motivo:'A escrituração em dia é a base do controle de estoque de medicamentos sujeitos a controle especial.',
-          legal:'Portaria SVS/MS nº 344/1998 e RDC nº 471/2021 (SNGPC eletrônico).',
-          correcao:'Lançar retroativamente com justificativa e regularizar antes do fechamento do balanço mensal.' },
+          correcao:'Lançar retroativamente com justificativa e regularizar antes do fechamento do balanço mensal.',
+          normas:['portaria344_1998','rdc22_2014'] },
         { id:'c3', texto:'Balanço físico do estoque de controlados compatível com o escriturado', crit:'alta',
           motivo:'Divergências podem indicar erro de registro ou desvio de produto controlado.',
-          legal:'Portaria SVS/MS nº 344/1998.',
-          correcao:'Apurar a divergência, investigar a causa e comunicar o RT; se houver indício de desvio, notificar a vigilância sanitária.' },
+          correcao:'Apurar a divergência, investigar a causa e comunicar o RT; se houver indício de desvio, notificar a vigilância sanitária.',
+          normas:['portaria344_1998'] },
         { id:'c4', texto:'Notificações de Receita arquivadas em ordem e dentro do prazo de guarda', crit:'media',
           motivo:'O arquivamento organizado é exigido para fins de fiscalização e rastreabilidade.',
-          legal:'Portaria SVS/MS nº 344/1998.',
-          correcao:'Reorganizar o arquivo por data/tipo de receita e verificar o prazo mínimo de guarda aplicável.' },
-        { id:'c5', texto:'Transmissão do SNGPC realizada dentro do prazo legal', crit:'alta',
-          motivo:'O atraso na transmissão é infração sanitária passível de penalidade.',
-          legal:'RDC nº 471/2021.',
-          correcao:'Regularizar a transmissão pendente e verificar a causa do atraso (conectividade, erro de sistema, etc.).' }
+          correcao:'Reorganizar o arquivo por data/tipo de receita e verificar o prazo mínimo de guarda aplicável.',
+          normas:['portaria344_1998'] },
+        { id:'c5', texto:'Transmissão dos arquivos ao SNGPC realizada dentro do prazo vigente', crit:'alta',
+          motivo:'O atraso na transmissão, quando exigida, é infração sanitária passível de penalidade.',
+          correcao:'Regularizar a transmissão pendente e verificar a causa do atraso (conectividade, erro de sistema etc.).',
+          normas:['rdc22_2014'] }
       ]
     },
     {
@@ -749,24 +899,24 @@ const DATA = {
       itens: [
         { id:'l1', texto:'Balcões de atendimento e áreas de manipulação higienizados', crit:'media',
           motivo:'Reduz o risco de contaminação cruzada em áreas de contato com medicamentos e pacientes.',
-          legal:'RDC nº 44/2009 – condições sanitárias.',
-          correcao:'Realizar a higienização conforme o POP de limpeza vigente e registrar o horário.' },
+          correcao:'Realizar a higienização conforme o POP de limpeza vigente e registrar o horário.',
+          normas:['rdc44_2009'] },
         { id:'l2', texto:'Piso e áreas comuns limpos e sem obstrução', crit:'baixa',
           motivo:'Condições básicas de sanitização e segurança do ambiente de trabalho.',
-          legal:'RDC nº 44/2009.',
-          correcao:'Solicitar limpeza e remover objetos que obstruam a circulação.' },
+          correcao:'Solicitar limpeza e remover objetos que obstruam a circulação.',
+          normas:['rdc44_2009'] },
         { id:'l3', texto:'Descarte de perfurocortantes em coletor adequado (quando há serviços/testes farmacêuticos)', crit:'alta',
           motivo:'O descarte inadequado expõe a equipe e terceiros a risco biológico.',
-          legal:'RDC nº 222/2018 (PGRSS) e NR-32.',
-          correcao:'Substituir o coletor imediatamente e reforçar o treinamento da equipe sobre descarte seguro.' },
+          correcao:'Substituir o coletor imediatamente e reforçar o treinamento da equipe sobre descarte seguro.',
+          normas:['rdc222_2018','nr32'] },
         { id:'l4', texto:'Resíduos segregados conforme classificação (grupos A, B, D e E)', crit:'alta',
           motivo:'A segregação incorreta compromete o gerenciamento de resíduos e pode gerar risco sanitário/ambiental.',
-          legal:'RDC nº 222/2018 – Plano de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS).',
-          correcao:'Reclassificar os resíduos e reforçar a sinalização e o treinamento da equipe.' },
+          correcao:'Reclassificar os resíduos e reforçar a sinalização e o treinamento da equipe.',
+          normas:['rdc222_2018'] },
         { id:'l5', texto:'Lixeiras identificadas por cor/símbolo conforme classificação de resíduos', crit:'baixa',
           motivo:'Facilita a segregação correta pela equipe e visitantes.',
-          legal:'RDC nº 222/2018.',
-          correcao:'Providenciar identificação adequada nas lixeiras conforme o PGRSS.' }
+          correcao:'Providenciar identificação adequada nas lixeiras conforme o PGRSS.',
+          normas:['rdc222_2018'] }
       ]
     },
     {
@@ -774,28 +924,28 @@ const DATA = {
       itens: [
         { id:'e1', texto:'Estoque organizado seguindo FEFO (primeiro que vence, primeiro que sai)', crit:'media',
           motivo:'Reduz perdas por vencimento e garante giro adequado dos produtos.',
-          legal:'RDC nº 44/2009 – organização de estoque.',
-          correcao:'Reorganizar as prateleiras priorizando os lotes com validade mais próxima na frente.' },
+          correcao:'Reorganizar as prateleiras priorizando os lotes com validade mais próxima na frente.',
+          normas:['rdc44_2009'] },
         { id:'e2', texto:'Produtos não armazenados diretamente no chão (uso de estrados/prateleiras)', crit:'media',
           motivo:'Contato direto com o piso favorece contaminação e danos às embalagens.',
-          legal:'RDC nº 44/2009 – condições de armazenamento.',
-          correcao:'Transferir os produtos para estrados ou prateleiras adequadas.' },
+          correcao:'Transferir os produtos para estrados ou prateleiras adequadas.',
+          normas:['rdc44_2009'] },
         { id:'e3', texto:'Distância mínima das paredes respeitada para ventilação e limpeza', crit:'baixa',
           motivo:'Facilita a circulação de ar e a limpeza, prevenindo umidade acumulada.',
-          legal:'RDC nº 44/2009.',
-          correcao:'Reposicionar as prateleiras/pilhas respeitando o espaçamento recomendado.' },
+          correcao:'Reposicionar as prateleiras/pilhas respeitando o espaçamento recomendado.',
+          normas:['rdc44_2009'] },
         { id:'e4', texto:'Lotes recebidos conferidos frente à nota fiscal e ao prazo de validade', crit:'alta',
           motivo:'O recebimento sem conferência pode introduzir produtos vencidos ou divergentes no estoque.',
-          legal:'RDC nº 44/2009 e RDC nº 430/2020 (recebimento e transporte).',
-          correcao:'Conferir cada lote recebido antes de disponibilizar para venda e registrar divergências junto ao fornecedor.' },
+          correcao:'Conferir cada lote recebido antes de disponibilizar para venda e registrar divergências junto ao fornecedor.',
+          normas:['rdc44_2009','rdc430_2020'] },
         { id:'e5', texto:'Inventário parcial/rotativo do estoque realizado', crit:'media',
           motivo:'Permite identificar divergências e produtos próximos ao vencimento com antecedência.',
-          legal:'RDC nº 44/2009.',
-          correcao:'Programar contagem cíclica por categoria terapêutica ou setor do estoque.' },
+          correcao:'Programar contagem cíclica por categoria terapêutica ou setor do estoque.',
+          normas:['rdc44_2009'] },
         { id:'e6', texto:'Prateleiras e gôndolas limpas e sem produtos vencidos misturados aos válidos', crit:'media',
           motivo:'Reduz risco de dispensação inadvertida de produto vencido ou danificado.',
-          legal:'RDC nº 44/2009.',
-          correcao:'Higienizar e reorganizar segregando imediatamente qualquer item vencido ou avariado.' }
+          correcao:'Higienizar e reorganizar segregando imediatamente qualquer item vencido ou avariado.',
+          normas:['rdc44_2009'] }
       ]
     },
     {
@@ -803,24 +953,24 @@ const DATA = {
       itens: [
         { id:'s1', texto:'Sala/espaço de serviços farmacêuticos organizado e com privacidade adequada', crit:'media',
           motivo:'A privacidade é requisito para a prestação de serviços clínicos (aferições, testes, orientações).',
-          legal:'RDC nº 44/2009 (serviços farmacêuticos) e Resolução CFF nº 585/2013.',
-          correcao:'Reorganizar o espaço e garantir isolamento visual/acústico adequado ao atendimento.' },
+          correcao:'Reorganizar o espaço e garantir isolamento visual/acústico adequado ao atendimento.',
+          normas:['rdc44_2009','resolucaocff585_2013'] },
         { id:'s2', texto:'Equipamentos (esfigmomanômetro, glicosímetro) calibrados/aferidos dentro do prazo', crit:'alta',
           motivo:'Equipamentos descalibrados geram resultados clínicos incorretos.',
-          legal:'RDC nº 44/2009; RDC nº 786/2023 quando aplicável a testes rápidos (EAC).',
-          correcao:'Retirar o equipamento de uso até a calibração e agendar manutenção/verificação metrológica.' },
+          correcao:'Retirar o equipamento de uso até a calibração e agendar manutenção/verificação metrológica.',
+          normas:['rdc44_2009','rdc978_2025'] },
         { id:'s3', texto:'Materiais de uso único e antissépticos dentro da validade', crit:'alta',
           motivo:'Materiais vencidos comprometem a segurança do serviço prestado ao paciente.',
-          legal:'RDC nº 44/2009.',
-          correcao:'Descartar os itens vencidos e repor o estoque de materiais de consumo.' },
+          correcao:'Descartar os itens vencidos e repor o estoque de materiais de consumo.',
+          normas:['rdc44_2009'] },
         { id:'s4', texto:'Registro dos serviços prestados preenchido (aferição de PA, glicemia, testes, etc.)', crit:'media',
           motivo:'O registro do cuidado farmacêutico é exigido para fins de rastreabilidade e continuidade do cuidado.',
-          legal:'Resolução CFF nº 585/2013.',
-          correcao:'Preencher os registros pendentes e reforçar a rotina de documentação com a equipe.' },
+          correcao:'Preencher os registros pendentes e reforçar a rotina de documentação com a equipe.',
+          normas:['resolucaocff585_2013'] },
         { id:'s5', texto:'Descarte de materiais perfurocortantes do serviço farmacêutico conforme PGRSS', crit:'alta',
           motivo:'Evita acidentes com material biológico e contaminação.',
-          legal:'RDC nº 222/2018 e NR-32.',
-          correcao:'Substituir o coletor e revisar o fluxo de descarte com a equipe.' }
+          correcao:'Substituir o coletor e revisar o fluxo de descarte com a equipe.',
+          normas:['rdc222_2018','nr32'] }
       ]
     },
     {
@@ -828,28 +978,28 @@ const DATA = {
       itens: [
         { id:'d1', texto:'Licença Sanitária vigente e exposta em local visível', crit:'alta',
           motivo:'O funcionamento sem licença sanitária válida é infração grave.',
-          legal:'Lei nº 5.991/1973.',
-          correcao:'Verificar prazo de validade junto à vigilância sanitária municipal e providenciar renovação.' },
+          correcao:'Verificar prazo de validade junto à vigilância sanitária municipal e providenciar renovação.',
+          normas:['lei5991_1973'] },
         { id:'d2', texto:'Autorização de Funcionamento de Empresa (AFE/AE) da Anvisa vigente', crit:'alta',
           motivo:'Exigência para o funcionamento legal de estabelecimentos que comercializam medicamentos.',
-          legal:'Lei nº 6.360/1976 e regulamentação Anvisa correlata.',
-          correcao:'Consultar a situação no portal da Anvisa e regularizar pendências junto ao órgão.' },
+          correcao:'Consultar a situação no portal da Anvisa e regularizar pendências junto ao órgão.',
+          normas:['lei6360_1976'] },
         { id:'d3', texto:'Comprovante de Responsabilidade Técnica (RT) do farmacêutico exposto e CRF regularizado', crit:'alta',
           motivo:'A farmácia deve ter responsável técnico habilitado e visivelmente identificado durante todo o funcionamento.',
-          legal:'Lei nº 13.021/2014.',
-          correcao:'Regularizar a anotação de responsabilidade técnica junto ao CRF e expor o comprovante atualizado.' },
+          correcao:'Regularizar a anotação de responsabilidade técnica junto ao CRF e expor o comprovante atualizado.',
+          normas:['lei13021_2014'] },
         { id:'d4', texto:'POPs (Procedimentos Operacionais Padrão) revisados e atualizados', crit:'media',
           motivo:'POPs desatualizados não refletem a prática real e comprometem auditorias.',
-          legal:'RDC nº 44/2009.',
-          correcao:'Revisar os POPs com a equipe e providenciar nova versão datada e assinada.' },
+          correcao:'Revisar os POPs com a equipe e providenciar nova versão datada e assinada.',
+          normas:['rdc44_2009'] },
         { id:'d5', texto:'Manual de Boas Práticas Farmacêuticas disponível e atualizado', crit:'media',
           motivo:'Documento de referência exigido para demonstrar conformidade às Boas Práticas Farmacêuticas.',
-          legal:'RDC nº 44/2009.',
-          correcao:'Atualizar o manual e disponibilizá-lo para consulta da equipe.' },
+          correcao:'Atualizar o manual e disponibilizá-lo para consulta da equipe.',
+          normas:['rdc44_2009'] },
         { id:'d6', texto:'Plano de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS) revisado', crit:'media',
           motivo:'O PGRSS deve refletir a realidade operacional atual do estabelecimento.',
-          legal:'RDC nº 222/2018.',
-          correcao:'Revisar o plano junto ao responsável técnico e atualizar conforme mudanças na rotina.' }
+          correcao:'Revisar o plano junto ao responsável técnico e atualizar conforme mudanças na rotina.',
+          normas:['rdc222_2018'] }
       ]
     }
   ]
@@ -892,7 +1042,7 @@ function dataHoraFormatada(iso){
   return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
 }
 
-let categoriaAtual = null; // null = dashboard, 'nc' = não conformidades
+let categoriaAtual = null; // null = dashboard, 'nc' = não conformidades, 'fontes' = fonte de dados
 
 // ---------- Reset automático por período ----------
 function hojeISO(d){ return d.toISOString().slice(0,10); }
@@ -969,10 +1119,18 @@ function contarNaoConformidadesAbertas(){
   return autoAbertas + manualAbertas;
 }
 
+function abrirFontesDados(){
+  categoriaAtual = 'fontes';
+  renderSidebar(document.getElementById('busca').value);
+  renderMain();
+}
+
 function renderSidebar(filtro=''){
   const lista = document.getElementById('lista-categorias');
   lista.innerHTML = '';
   const termo = filtro.trim().toLowerCase();
+
+  document.getElementById('btn-fonte-dados').classList.toggle('active', categoriaAtual === 'fontes');
 
   // Visão geral
   const dashBtn = document.createElement('button');
@@ -1046,6 +1204,25 @@ function statusCategoria(cat){
 }
 
 // =====================================================================
+// RENDER: cartão de norma reutilizável
+// =====================================================================
+function renderNormaCard(chave){
+  const n = NORMAS[chave];
+  if(!n) return '';
+  return `
+    <div class="norma-card">
+      <div class="norma-titulo">
+        <span class="norma-sigla">${n.tipo} ${n.numero}</span>
+        <span class="norma-orgao">${n.orgao}</span>
+      </div>
+      <div class="norma-nome">${n.titulo}</div>
+      <div class="norma-contexto">${n.contexto}</div>
+      <a class="norma-link" href="${n.link}" target="_blank" rel="noopener">Consultar norma completa ↗</a>
+    </div>
+  `;
+}
+
+// =====================================================================
 // RENDER PRINCIPAL
 // =====================================================================
 function renderMain(abrirItem=false, itemIdParaAbrir=null){
@@ -1053,11 +1230,13 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
 
   if(categoriaAtual === null){ renderDashboard(el); return; }
   if(categoriaAtual === 'nc'){ renderNaoConformidades(el); return; }
+  if(categoriaAtual === 'fontes'){ renderFontesDados(el); return; }
 
   const cat = DATA.categorias.find(c => c.id === categoriaAtual);
   const { total, marcados } = contagemCategoria(cat);
   const pct = total ? Math.round((marcados/total)*100) : 0;
   const status = statusCategoria(cat);
+  const todosMarcados = marcados === total;
 
   el.innerHTML = `
     <div class="main-header">
@@ -1068,7 +1247,10 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
           <span class="status-chip ${status.classe}">${status.label}</span>
         </div>
       </div>
-      <button class="btn-ghost" id="btn-reset-cat">↺ Reiniciar rotina</button>
+      <div class="main-header-actions">
+        <button class="btn-ghost primario" id="btn-marcar-todos">${todosMarcados ? '✓ Todos marcados' : '✓ Marcar Todos'}</button>
+        <button class="btn-ghost" id="btn-reset-cat">↺ Reiniciar rotina</button>
+      </div>
     </div>
 
     <div class="resumo-bar">
@@ -1080,7 +1262,7 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
     </div>
 
     <div class="itens-grid" id="itens-grid"></div>
-    <div class="fonte-tag">📚 Base normativa consolidada a partir de RDCs, portarias e resoluções vigentes — sempre confirme a versão mais recente na legislação oficial.</div>
+    <div class="fonte-tag">📚 Base normativa consolidada a partir de RDCs, portarias e resoluções vigentes — veja o painel "Fonte de Dados" no menu para os links oficiais.</div>
   `;
 
   const grid = document.getElementById('itens-grid');
@@ -1089,6 +1271,7 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
     const ts = estado[item.id] ? estado[item.id].ts : null;
     const abrirEsse = abrirItem && item.id === itemIdParaAbrir;
     const dot = item.crit === 'alta' ? '🔴' : item.crit === 'media' ? '🟡' : '🟢';
+    const normasHtml = (item.normas || []).map(renderNormaCard).join('');
     const card = document.createElement('div');
     card.className = 'item-card' + (checked ? ' checked' : '') + (abrirEsse ? ' aberto' : '');
     card.innerHTML = `
@@ -1100,8 +1283,11 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
       </div>
       <div class="item-detail">
         <div class="linha"><span class="rotulo">Por que</span><span>${item.motivo}</span></div>
-        <div class="linha"><span class="rotulo">Base legal</span><span>${item.legal}</span></div>
         <div class="linha correcao"><span class="rotulo">Se não conforme</span><span>${item.correcao}</span></div>
+        <div class="normas-wrap">
+          <span class="rotulo">Base legal</span>
+          ${normasHtml}
+        </div>
       </div>
     `;
     card.querySelector('[data-role="check"]').addEventListener('click', (ev) => {
@@ -1115,6 +1301,13 @@ function renderMain(abrirItem=false, itemIdParaAbrir=null){
       card.classList.toggle('aberto');
     });
     grid.appendChild(card);
+  });
+
+  document.getElementById('btn-marcar-todos').addEventListener('click', () => {
+    cat.itens.forEach(i => { marcarItem(i.id, true); });
+    salvarJSON(K_STATE, estado);
+    renderSidebar();
+    renderMain();
   });
 
   document.getElementById('btn-reset-cat').addEventListener('click', () => {
@@ -1161,7 +1354,7 @@ function renderDashboard(el){
 
     <div class="aviso-responsabilidade">
       <div class="aviso-titulo">⚠️ Aviso de Uso</div>
-      <p>Este checklist é uma <strong>ferramenta de apoio operacional</strong> para a rotina do farmacêutico responsável técnico e de sua equipe. Ele não substitui a leitura integral das normas citadas, que devem ser sempre consultadas em sua versão vigente e integral junto à Anvisa e demais órgãos reguladores.</p>
+      <p>Este checklist é uma <strong>ferramenta de apoio operacional</strong> para a rotina do farmacêutico responsável técnico e de sua equipe. Ele não substitui a leitura integral das normas citadas, que devem ser sempre consultadas em sua versão vigente e integral — use o painel <strong>"Fonte de Dados"</strong> no menu para acessá-las diretamente.</p>
       <p>Os dados marcados são armazenados <strong>apenas no navegador do dispositivo utilizado</strong> (armazenamento local), não havendo envio a servidores externos.</p>
     </div>
   `;
@@ -1297,6 +1490,50 @@ function renderNaoConformidades(el){
   });
 }
 
+// ---------- Painel Fonte de Dados ----------
+function renderFontesDados(el){
+  const grupos = {};
+  Object.keys(NORMAS).forEach(chave => {
+    const n = NORMAS[chave];
+    if(!grupos[n.tipo]) grupos[n.tipo] = [];
+    grupos[n.tipo].push(n);
+  });
+
+  el.innerHTML = `
+    <div class="main-header">
+      <div>
+        <h2>📚 Fonte de Dados</h2>
+        <div class="tags-row"><span class="cat-tag">Consulta manual das normas utilizadas neste checklist</span></div>
+      </div>
+    </div>
+    <p style="font-size:.84rem; color:var(--text-gray); line-height:1.6; margin-bottom:22px;">
+      Esta lista reúne todas as legislações, resoluções e normas citadas nos itens do checklist, com o órgão emissor e uma breve explicação de origem. Use os links para consultar o texto oficial e completo sempre que precisar — recomenda-se revisão periódica, já que normas sanitárias são atualizadas com frequência.
+    </p>
+    <div id="fontes-lista"></div>
+  `;
+
+  const listaEl = document.getElementById('fontes-lista');
+  Object.keys(grupos).forEach(tipo => {
+    const grupoDiv = document.createElement('div');
+    grupoDiv.className = 'fonte-grupo';
+    grupoDiv.innerHTML = `<h3>${tipo}</h3>`;
+    grupos[tipo].forEach(n => {
+      const item = document.createElement('div');
+      item.className = 'fonte-item';
+      item.innerHTML = `
+        <div class="fi-main">
+          <div class="fi-sigla">${n.tipo} ${n.numero} — ${n.orgao}</div>
+          <div class="fi-titulo">${n.titulo}</div>
+          <div class="fi-contexto">${n.contexto}</div>
+        </div>
+        <a class="fi-link" href="${n.link}" target="_blank" rel="noopener">Consultar ↗</a>
+      `;
+      grupoDiv.appendChild(item);
+    });
+    listaEl.appendChild(grupoDiv);
+  });
+}
+
 // =====================================================================
 // RELATÓRIO PDF (via impressão do navegador)
 // =====================================================================
@@ -1333,16 +1570,18 @@ function gerarRelatorioPDF(){
     html += `<div class="rel-cat">
       <h3>${cat.icone} ${cat.nome}<span class="rel-freq">(${DATA.freqLabel[cat.freq]})</span></h3>
       <table class="rel-table">
-        <thead><tr><th style="width:46%">Item</th><th style="width:10%">Criticidade</th><th style="width:14%">Status</th><th style="width:30%">Conferido em</th></tr></thead>
+        <thead><tr><th style="width:38%">Item</th><th style="width:10%">Criticidade</th><th style="width:14%">Status</th><th style="width:20%">Conferido em</th><th style="width:18%">Base legal</th></tr></thead>
         <tbody>`;
     cat.itens.forEach(item => {
       const ok = estaMarcado(item.id);
       const ts = estado[item.id] ? estado[item.id].ts : null;
+      const normasTxt = (item.normas || []).map(k => NORMAS[k] ? (NORMAS[k].tipo + ' ' + NORMAS[k].numero) : '').join('; ');
       html += `<tr>
         <td>${item.texto}</td>
         <td class="rel-crit-${item.crit}">${rotuloCrit[item.crit]}</td>
         <td class="${ok ? 'rel-ok' : 'rel-nok'}">${ok ? '✔ Conforme' : '✘ Não conforme'}</td>
         <td>${ok ? dataHoraFormatada(ts) : '—'}</td>
+        <td>${normasTxt}</td>
       </tr>`;
     });
     html += `</tbody></table></div>`;
@@ -1376,7 +1615,7 @@ function gerarRelatorioPDF(){
   html += `</div>`;
 
   html += `<div class="rel-footer">
-    Relatório gerado automaticamente pela ferramenta de Checklist de Rotina do FarmaPrática. As datas de conferência refletem o último registro salvo no navegador utilizado; itens diários, semanais e mensais são reiniciados automaticamente ao final de cada período. Este documento é um instrumento de apoio interno e não substitui os registros oficiais exigidos pela legislação sanitária vigente.
+    Relatório gerado automaticamente pela ferramenta de Checklist de Rotina do FarmaPrática. As datas de conferência refletem o último registro salvo no navegador utilizado; itens diários, semanais e mensais são reiniciados automaticamente ao final de cada período. Este documento é um instrumento de apoio interno e não substitui os registros oficiais exigidos pela legislação sanitária vigente nem a consulta ao texto integral e atualizado de cada norma (disponível no painel "Fonte de Dados").
   </div>`;
 
   document.getElementById('relatorio-impressao').innerHTML = html;
