@@ -206,15 +206,15 @@
     box-shadow: 4px 0 24px rgba(0,0,0,.15);
     z-index: 2;
   }
-  .sidebar-header{ padding: 16px 18px 12px; }
+  .sidebar-header{ padding: 18px 16px 14px; }
   .search-box{
     display:flex;
     align-items:center;
     gap:8px;
     background: var(--panel);
     border:1px solid var(--border);
-    border-radius:9px;
-    padding: 8px 10px;
+    border-radius:24px;
+    padding: 9px 14px;
     transition: border-color .15s ease, box-shadow .15s ease;
     margin-bottom: 10px;
   }
@@ -229,70 +229,88 @@
     justify-content:center;
     gap:8px;
     width:100%;
-    padding: 10px 12px;
-    border-radius:9px;
-    border: 1px solid rgba(242,184,75,.4);
+    padding: 11px 12px;
+    border-radius:24px;
+    border: 1px dashed rgba(242,184,75,.5);
     background: linear-gradient(135deg, rgba(242,184,75,.14), rgba(180,25,42,.08));
     color: var(--amber);
-    font-size:.82rem;
+    font-size:.8rem;
     font-weight:800;
     cursor:pointer;
     letter-spacing:.2px;
     transition: transform .1s ease, background .15s ease;
   }
   .btn-fonte-dados:hover{ transform: translateY(-1px); background: linear-gradient(135deg, rgba(242,184,75,.22), rgba(180,25,42,.12)); }
-  .btn-fonte-dados.active{ background: linear-gradient(135deg, var(--red-dark), var(--red)); color:#fff; border-color: transparent; }
-  .sidebar-list{ flex:1; overflow-y:auto; padding: 4px 10px 20px; }
-  .cat-header{
-    font-size:.72rem;
-    text-transform:uppercase;
-    letter-spacing:.9px;
-    color: var(--amber);
-    font-weight:800;
-    margin: 18px 4px 8px;
-    padding: 4px 0 6px 8px;
-    border-left: 3px solid var(--red-bright);
-    border-bottom: 1px solid var(--border);
+  .btn-fonte-dados.active{ background: linear-gradient(135deg, var(--red-dark), var(--red)); color:#fff; border-color: transparent; border-style:solid; }
+
+  /* ---------- Navegação em "trilha" vertical (estilo timeline) ---------- */
+  .sidebar-list{ flex:1; overflow-y:auto; padding: 6px 14px 24px; }
+  .pin-row{ display:flex; flex-direction:column; gap:8px; margin-bottom: 18px; }
+  .pin-card{
+    display:flex; align-items:center; gap:10px;
+    width:100%; text-align:left; cursor:pointer;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 12px;
+    color: var(--text-gray); font-size:.85rem; font-weight:700;
+    transition: background .15s ease, border-color .15s ease, transform .1s ease;
   }
-  .cat-header:first-child{ margin-top: 2px; }
-  .cat-item{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-    width:100%;
-    text-align:left;
-    background:none;
-    border:none;
-    color: var(--text-gray);
-    font-size:.86rem;
-    padding: 8px 10px;
-    border-radius:6px;
-    cursor:pointer;
-    margin-bottom: 2px;
+  .pin-card .pin-ic{
+    width:30px; height:30px; border-radius:9px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:1rem;
+    background: var(--card);
   }
-  .cat-item .cat-item-label{ display:flex; align-items:center; gap:9px; overflow:hidden; }
-  .cat-item .cat-item-label span.txt{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .cat-item .cat-count{
-    font-size:.68rem;
-    font-weight:700;
-    color: var(--text-dim);
-    background: var(--panel);
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:1px 7px;
-    flex-shrink:0;
+  .pin-card:hover{ transform: translateX(2px); border-color: var(--red-bright); }
+  .pin-card.active{ background: linear-gradient(135deg, var(--red-dark), var(--red)); color:#fff; border-color:transparent; }
+  .pin-card.active .pin-ic{ background: rgba(255,255,255,.18); }
+  .pin-card.nc-pin{ color: var(--pill-text); }
+  .pin-card .pin-badge{
+    margin-left:auto; font-size:.68rem; font-weight:800; padding:2px 8px; border-radius:20px;
+    background: var(--card); border:1px solid var(--border); color:var(--text-dim); flex-shrink:0;
   }
-  .cat-item:hover{ background: var(--hover-tint); color:#fff; }
-  .cat-item.active{
+  .pin-card.active .pin-badge{ background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.3); color:#fff; }
+
+  .rail-group{ position:relative; padding-left:20px; margin-bottom:22px; }
+  .rail-group::before{
+    content:''; position:absolute; left:6px; top:22px; bottom:10px; width:2px;
+    background: linear-gradient(var(--rail-color), transparent 95%);
+    opacity:.35;
+  }
+  .rail-title{
+    display:flex; align-items:center; gap:8px; position:relative;
+    font-size:.68rem; text-transform:uppercase; letter-spacing:1px; font-weight:800;
+    color: var(--rail-color); margin-bottom:12px; margin-left:-20px; padding-left:20px;
+  }
+  .rail-title::before{
+    content:''; position:absolute; left:2px; top:50%; transform:translateY(-50%);
+    width:9px; height:9px; border-radius:50%; background: var(--rail-color);
+    box-shadow: 0 0 0 3px var(--hover-tint);
+  }
+  .rail-node{ position:relative; margin-bottom:10px; }
+  .rail-node::before{
+    content:''; position:absolute; left:-17px; top:50%; transform:translateY(-50%);
+    width:7px; height:7px; border-radius:50%; background: var(--rail-color); opacity:.7;
+  }
+  .rail-card{
+    display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 9px 12px 9px 10px; cursor:pointer; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    transition: background .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .rail-card:hover{ transform: translateX(3px); border-color: var(--rail-color); }
+  .rail-card.active{
     background: linear-gradient(135deg, var(--red-dark), var(--red));
-    color:#fff;
-    font-weight:600;
+    border-color: transparent;
   }
-  .cat-item.active .cat-count{ background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.3); color:#fff; }
-  .cat-item.nc-item{ color: var(--pill-text); }
-  .cat-item.nc-item .cat-count{ background: rgba(239,45,64,.15); border-color: rgba(239,45,64,.3); color: var(--red-bright); }
-  .cat-item.dash-item{ font-weight:700; color: var(--text); }
+  .rail-card .rc-ic{ font-size:1.05rem; flex-shrink:0; }
+  .rail-card .rc-label{
+    flex:1; min-width:0; font-size:.83rem; font-weight:600; color: var(--text-gray);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .rail-card.active .rc-label{ color:#fff; }
+  .rail-card .rc-ring{ flex-shrink:0; }
+  .rail-card .rc-ring text{ fill: var(--text-dim); font-size: 8px; font-weight:800; font-family:'Inter',sans-serif; }
+  .rail-card.active .rc-ring text{ fill:#fff; }
+  .rail-card.active .rc-ring .ring-track{ stroke: rgba(255,255,255,.25); }
 
   /* ---------- Main ---------- */
   .main{ flex:1; display:flex; justify-content:center; padding: 26px 40px 60px; overflow-y:auto; height:100%; }
@@ -645,6 +663,10 @@
   .rel-crit-media{ color:#a67200; font-weight:700; }
   .rel-crit-baixa{ color:#777; font-weight:700; }
   .rel-nc-section h3{ font-size:1rem; font-weight:800; color:#b4192a; margin: 24px 0 10px; border-bottom:1px solid #ddd; padding-bottom:6px; }
+  .rel-assinatura{ margin-top:34px; display:flex; gap:40px; flex-wrap:wrap; page-break-inside:avoid; }
+  .rel-assinatura .rel-assin-campo{ flex:1; min-width:220px; }
+  .rel-assinatura .rel-assin-linha{ border-bottom:1px solid #333; height:36px; }
+  .rel-assinatura .rel-assin-label{ font-size:.72rem; color:#555; margin-top:6px; }
   .rel-footer{ margin-top:26px; padding-top:12px; border-top:1px solid #ccc; font-size:.68rem; color:#888; }
 
   @media print{
@@ -784,6 +806,72 @@ const NORMAS = {
     titulo: 'Segurança e Saúde no Trabalho em Serviços de Saúde',
     contexto: 'Norma trabalhista (não sanitária) publicada em 2005 pelo então Ministério do Trabalho, com o objetivo de proteger os trabalhadores da saúde de riscos biológicos, químicos e físicos, incluindo regras de descarte de perfurocortantes.',
     link: 'https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-32-nr-32'
+  },
+  nr7: {
+    tipo: 'Norma Regulamentadora', numero: 'NR-7', orgao: 'Ministério do Trabalho e Emprego',
+    titulo: 'Programa de Controle Médico de Saúde Ocupacional (PCMSO)',
+    contexto: 'Norma trabalhista originalmente editada em 1978 para regulamentar os arts. 168 e 169 da CLT, com revisões em 2020 e 2022. Exige que todo empregador — incluindo farmácias — mantenha um programa de acompanhamento médico ocupacional de seus funcionários.',
+    link: 'https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/norma-regulamentadora-no-7-nr-7'
+  },
+  rdc471_2021: {
+    tipo: 'RDC', numero: 'nº 471/2021', orgao: 'Anvisa',
+    titulo: 'Prescrição, dispensação e controle de medicamentos antimicrobianos',
+    contexto: 'Publicada em 2021 em substituição à RDC nº 20/2011, disciplina especificamente a venda de antibióticos: exige retenção de receita e escrituração da movimentação também no SNGPC (ou livro específico), de forma complementar à Portaria 344/98 e à RDC 22/2014.',
+    link: 'https://bvsms.saude.gov.br/bvs/saudelegis/anvisa/2020/rdc0471_23_02_2021.pdf'
+  },
+  rdc275_2019: {
+    tipo: 'RDC', numero: 'nº 275/2019', orgao: 'Anvisa',
+    titulo: 'Autorização de Funcionamento (AFE) e Autorização Especial (AE) de farmácias e drogarias',
+    contexto: 'Publicada em 2019, detalha especificamente para farmácias e drogarias os critérios de concessão, alteração e cancelamento da AFE/AE junto à Anvisa — é a norma operacional que complementa a Lei nº 6.360/1976.',
+    link: 'https://bvsms.saude.gov.br/bvs/saudelegis/anvisa/2019/rdc0275_9_04_2019.pdf'
+  },
+  rdc333_2003: {
+    tipo: 'RDC', numero: 'nº 333/2003', orgao: 'Anvisa',
+    titulo: 'Regulamento técnico de rotulagem de medicamentos',
+    contexto: 'Publicada em 2003, exige que medicamentos com destinação hospitalar tragam a inscrição "EMBALAGEM HOSPITALAR" no rótulo — base da vedação a que farmácias e drogarias vendam ao público esses produtos diretamente ao consumidor final.',
+    link: 'https://bvsms.saude.gov.br/bvs/saudelegis/anvisa/2003/rdc0333_19_11_2003.html'
+  },
+  rdc80_2006: {
+    tipo: 'RDC', numero: 'nº 80/2006', orgao: 'Anvisa',
+    titulo: 'Fracionamento de medicamentos em farmácias e drogarias',
+    contexto: 'Publicada em 2006, estabelece as Boas Práticas para Fracionamento: quais apresentações podem ser fracionadas, como identificar a embalagem secundária e a proibição de fracionar medicamentos sujeitos a controle especial (Portaria 344/98).',
+    link: 'https://bvsms.saude.gov.br/bvs/saudelegis/anvisa/2006/rdc0080_11_05_2006.html'
+  },
+  lei11951_2009: {
+    tipo: 'Lei Federal', numero: 'nº 11.951/2009', orgao: 'Presidência da República',
+    titulo: 'Vedação à captação de receitas magistrais/oficinais em drogarias',
+    contexto: 'Publicada em 2009, alterou o art. 36 da Lei nº 5.991/1973 para proibir que drogarias, ervanárias e postos de medicamentos (sem manipulação) captem receitas magistrais ou oficinais para encaminhar a farmácias de manipulação.',
+    link: 'https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2009/lei/l11951.htm'
+  },
+  decreto10388_2020: {
+    tipo: 'Decreto Federal', numero: 'nº 10.388/2020', orgao: 'Presidência da República',
+    titulo: 'Logística reversa de medicamentos domiciliares vencidos ou em desuso',
+    contexto: 'Publicado em 2020, regulamenta a Política Nacional de Resíduos Sólidos (Lei 12.305/2010) para medicamentos: farmácias e drogarias passam a ser pontos de recebimento para descarte de medicamentos vencidos ou em desuso pelos consumidores, conforme cronograma por porte de município.',
+    link: 'https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10388.htm'
+  },
+  resolucaocff700_2021: {
+    tipo: 'Resolução CFF', numero: 'nº 700/2021', orgao: 'Conselho Federal de Farmácia',
+    titulo: 'Fiscalização do exercício profissional e Certidão de Regularidade (CR)',
+    contexto: 'Publicada em 2021 em substituição à Resolução CFF nº 648/2017, regulamenta os procedimentos de fiscalização dos Conselhos Regionais e institui a Certidão de Regularidade (CR), documento que comprova a regularidade do farmacêutico responsável técnico.',
+    link: 'https://www.jusbrasil.com.br/diarios/documentos/1212017325/resolucao-n-700-21-05-2021-ato-publicado-no-dou'
+  },
+  resolucaocff654_2018: {
+    tipo: 'Resolução CFF', numero: 'nº 654/2018', orgao: 'Conselho Federal de Farmácia',
+    titulo: 'Requisitos para o serviço de vacinação pelo farmacêutico',
+    contexto: 'Publicada em 2018 em substituição à Resolução CFF nº 574/2013, exige curso de formação complementar específico e a averbação da habilitação junto ao CRF para que o farmacêutico possa prestar o serviço de vacinação.',
+    link: 'https://www.in.gov.br/materia/-/asset_publisher/Kujrw0TZC2Mb/content/id/4541328/do1-2018-02-27-resolucao-n-654-de-22-de-fevereiro-de-2018-4541324'
+  },
+  resolucaocff499_2008: {
+    tipo: 'Resolução CFF', numero: 'nº 499/2008', orgao: 'Conselho Federal de Farmácia',
+    titulo: 'Prestação de serviços farmacêuticos em farmácias e drogarias',
+    contexto: 'Publicada em 2008 (alterada pela Resolução CFF nº 505/2009), estabelece que somente farmacêutico habilitado pode prestar serviços farmacêuticos em farmácias e drogarias, com exceção expressa para aplicação de injetáveis por outros profissionais habilitados sob supervisão.',
+    link: 'https://www.cff.org.br/userfiles/20%20-%20BRASIL_%20CONSELHO%20FEDERAL%20DE%20FARM%C3%81CIA_%202009%20Resolucao_499_2008_CFF.pdf'
+  },
+  resolucaocff724_2022: {
+    tipo: 'Resolução CFF', numero: 'nº 724/2022', orgao: 'Conselho Federal de Farmácia',
+    titulo: 'Código de Ética e Código de Processo Ético Farmacêutico',
+    contexto: 'Publicada em 2022 em substituição à Resolução CFF nº 711/2021, reúne o Código de Ética Farmacêutica e as regras de processo e sanções disciplinares, incluindo deveres como a autonomia técnico-científica e o uso pessoal e intransferível de senhas de sistemas.',
+    link: 'https://www.in.gov.br/web/dou/-/resolucao-n-724-de-29-de-abril-de-2022-402116878'
   }
 };
 
@@ -841,7 +929,27 @@ const DATA = {
         { id:'m5', texto:'Medicamentos termolábeis conferidos quanto ao armazenamento correto (geladeira x prateleira)', crit:'alta',
           motivo:'Armazenamento fora da geladeira compromete a estabilidade de produtos termolábeis em poucas horas.',
           correcao:'Transferir imediatamente para refrigeração adequada e avaliar se houve perda de estabilidade.',
-          normas:['rdc430_2020'] }
+          normas:['rdc430_2020'] },
+        { id:'m6', texto:'Cumpre a proibição de comercializar medicamentos em embalagem hospitalar ao consumidor final', crit:'alta',
+          motivo:'Medicamentos com destinação hospitalar têm rotulagem, controle de qualidade e canal de distribuição próprios, distintos da venda ao público em geral.',
+          correcao:'Retirar imediatamente o produto da área de venda e verificar a origem/procedência junto ao fornecedor.',
+          normas:['rdc333_2003'] },
+        { id:'m7', texto:'Fracionamento de medicamentos (quando realizado) segue a regulamentação específica', crit:'media',
+          motivo:'O fracionamento fora das regras técnicas compromete a rastreabilidade e a integridade do medicamento; produtos de controle especial nunca podem ser fracionados.',
+          correcao:'Suspender o fracionamento até adequação aos requisitos técnicos e nunca fracionar itens da Portaria 344/98.',
+          normas:['rdc80_2006','portaria344_1998'] },
+        { id:'m8', texto:'Cumpre a proibição de captar receitas magistrais/oficinais para manipulação (drogarias sem manipulação)', crit:'alta',
+          motivo:'Drogarias sem laboratório de manipulação próprio não podem captar nem intermediar receitas desse tipo entre farmácias.',
+          correcao:'Orientar o paciente a procurar diretamente uma farmácia de manipulação licenciada.',
+          normas:['lei11951_2009','lei5991_1973'] },
+        { id:'m9', texto:'Lista de medicamentos genéricos disponível para consulta dos usuários', crit:'baixa',
+          motivo:'A disponibilização da lista favorece o acesso à opção mais econômica pelo paciente.',
+          correcao:'Disponibilizar a lista atualizada em local visível ou de fácil acesso ao balcão.',
+          normas:['rdc44_2009'] },
+        { id:'m10', texto:'Aquisição de medicamentos restrita a fornecedores/distribuidores qualificados e regularizados', crit:'media',
+          motivo:'Comprar de fornecedores não regularizados aumenta o risco de produtos falsificados, roubados ou adulterados entrarem no estoque.',
+          correcao:'Suspender compras do fornecedor até regularização e verificar a procedência do lote já recebido.',
+          normas:['rdc44_2009','rdc430_2020'] }
       ]
     },
     {
@@ -891,7 +999,11 @@ const DATA = {
         { id:'c5', texto:'Transmissão dos arquivos ao SNGPC realizada dentro do prazo vigente', crit:'alta',
           motivo:'O atraso na transmissão, quando exigida, é infração sanitária passível de penalidade.',
           correcao:'Regularizar a transmissão pendente e verificar a causa do atraso (conectividade, erro de sistema etc.).',
-          normas:['rdc22_2014'] }
+          normas:['rdc22_2014'] },
+        { id:'c6', texto:'Medicamentos antimicrobianos controlados por sistema aceito pela vigilância sanitária', crit:'alta',
+          motivo:'Antibióticos têm regras próprias de retenção de receita e escrituração, distintas (mas complementares) das demais substâncias da Portaria 344/98.',
+          correcao:'Regularizar a escrituração dos antimicrobianos no mesmo sistema utilizado para os demais controlados.',
+          normas:['rdc22_2014','rdc471_2021'] }
       ]
     },
     {
@@ -970,7 +1082,23 @@ const DATA = {
         { id:'s5', texto:'Descarte de materiais perfurocortantes do serviço farmacêutico conforme PGRSS', crit:'alta',
           motivo:'Evita acidentes com material biológico e contaminação.',
           correcao:'Substituir o coletor e revisar o fluxo de descarte com a equipe.',
-          normas:['rdc222_2018','nr32'] }
+          normas:['rdc222_2018','nr32'] },
+        { id:'s6', texto:'Farmacêutico que aplica vacinas possui habilitação averbada junto ao CRF, com certificado exposto', crit:'alta',
+          motivo:'Sem o curso de formação complementar averbado, o farmacêutico não está habilitado a prestar o serviço de vacinação.',
+          correcao:'Suspender o serviço até a averbação ser concluída junto ao CRF e afixar o certificado assim que emitido.',
+          normas:['resolucaocff654_2018'] },
+        { id:'s7', texto:'Uso de EPIs (Equipamentos de Proteção Individual) pela equipe durante os serviços farmacêuticos', crit:'media',
+          motivo:'Reduz o risco de exposição a material biológico durante aferições, injetáveis e testes.',
+          correcao:'Disponibilizar EPIs adequados e reforçar o uso obrigatório com a equipe.',
+          normas:['rdc44_2009'] },
+        { id:'s8', texto:'Aplicação de injetáveis realizada por farmacêutico ou profissional habilitado sob sua supervisão', crit:'alta',
+          motivo:'A aplicação de injetáveis é serviço farmacêutico por regra, com exceção expressa apenas para profissionais habilitados sob supervisão do farmacêutico.',
+          correcao:'Suspender o serviço até garantir a presença/supervisão de farmacêutico habilitado.',
+          normas:['resolucaocff499_2008','lei5991_1973'] },
+        { id:'s9', texto:'Caso realize Exames de Análises Clínicas (EAC), o estabelecimento está inscrito no CNES', crit:'media',
+          motivo:'A inscrição no CNES é exigência específica para farmácias que atuam como Serviço Tipo I de EAC.',
+          correcao:'Providenciar a inscrição no CNES antes de continuar oferecendo o serviço.',
+          normas:['rdc978_2025'] }
       ]
     },
     {
@@ -980,10 +1108,10 @@ const DATA = {
           motivo:'O funcionamento sem licença sanitária válida é infração grave.',
           correcao:'Verificar prazo de validade junto à vigilância sanitária municipal e providenciar renovação.',
           normas:['lei5991_1973'] },
-        { id:'d2', texto:'Autorização de Funcionamento de Empresa (AFE/AE) da Anvisa vigente', crit:'alta',
-          motivo:'Exigência para o funcionamento legal de estabelecimentos que comercializam medicamentos.',
-          correcao:'Consultar a situação no portal da Anvisa e regularizar pendências junto ao órgão.',
-          normas:['lei6360_1976'] },
+        { id:'d2', texto:'Autorização de Funcionamento de Empresa (AFE/AE) da Anvisa vigente e atualizada com o nome do RT', crit:'alta',
+          motivo:'Exigência para o funcionamento legal de estabelecimentos que comercializam medicamentos; a AFE desatualizada quanto ao RT também é considerada irregular.',
+          correcao:'Consultar a situação no portal da Anvisa e regularizar pendências, incluindo a atualização do responsável técnico.',
+          normas:['lei6360_1976','rdc275_2019'] },
         { id:'d3', texto:'Comprovante de Responsabilidade Técnica (RT) do farmacêutico exposto e CRF regularizado', crit:'alta',
           motivo:'A farmácia deve ter responsável técnico habilitado e visivelmente identificado durante todo o funcionamento.',
           correcao:'Regularizar a anotação de responsabilidade técnica junto ao CRF e expor o comprovante atualizado.',
@@ -999,7 +1127,89 @@ const DATA = {
         { id:'d6', texto:'Plano de Gerenciamento de Resíduos de Serviços de Saúde (PGRSS) revisado', crit:'media',
           motivo:'O PGRSS deve refletir a realidade operacional atual do estabelecimento.',
           correcao:'Revisar o plano junto ao responsável técnico e atualizar conforme mudanças na rotina.',
-          normas:['rdc222_2018'] }
+          normas:['rdc222_2018'] },
+        { id:'d7', texto:'Ponto de recebimento de logística reversa de medicamentos implementado, conforme cronograma vigente', crit:'media',
+          motivo:'Farmácias e drogarias enquadradas no cronograma são pontos obrigatórios de recebimento de medicamentos vencidos ou em desuso descartados pelos consumidores.',
+          correcao:'Verificar o cronograma aplicável ao porte do município e providenciar o dispensador contentor junto à entidade gestora.',
+          normas:['decreto10388_2020'] },
+        { id:'d8', texto:'PCMSO (Programa de Controle Médico de Saúde Ocupacional) elaborado e atualizado', crit:'media',
+          motivo:'É obrigação de todo empregador manter o acompanhamento médico ocupacional dos funcionários.',
+          correcao:'Contratar médico do trabalho responsável e elaborar/atualizar o programa.',
+          normas:['nr7'] },
+        { id:'d9', texto:'Farmacêutico possui acesso ao NOTIVISA para notificação de problemas relacionados a medicamentos (farmacovigilância)', crit:'media',
+          motivo:'A farmacovigilância é atribuição legal do farmacêutico e depende do cadastro ativo no sistema da Anvisa.',
+          correcao:'Providenciar login pessoal e intransferível no Notivisa para o farmacêutico responsável.',
+          normas:['rdc44_2009','lei13021_2014'] }
+      ]
+    },
+    {
+      id: 'estrutura', nome: 'Estrutura Física e Instalações', icone: '🏗️', freq: 'mensal',
+      itens: [
+        { id:'ef1', texto:'Estrutura física compatível com as atividades desenvolvidas (dimensionamento dos ambientes)', crit:'media',
+          motivo:'Ambientes subdimensionados comprometem o fluxo de atendimento e a qualidade dos serviços prestados.',
+          correcao:'Reavaliar o layout junto à vigilância sanitária local antes de ampliar atividades.',
+          normas:['rdc44_2009'] },
+        { id:'ef2', texto:'Acesso independente, sem comunicação direta com residências ou outros estabelecimentos', crit:'media',
+          motivo:'A comunicação direta com outros ambientes compromete o controle sanitário e a segurança do estabelecimento.',
+          correcao:'Isolar fisicamente o acesso ou regularizar junto à vigilância sanitária.',
+          normas:['lei5991_1973','rdc44_2009'] },
+        { id:'ef3', texto:'Piso, parede e teto lisos, impermeáveis, sem rachaduras e de fácil higienização', crit:'media',
+          motivo:'Superfícies inadequadas dificultam a limpeza e favorecem acúmulo de sujidade e proliferação de microrganismos.',
+          correcao:'Realizar reparo ou revestimento adequado das superfícies comprometidas.',
+          normas:['rdc44_2009'] },
+        { id:'ef4', texto:'Sanitário de fácil acesso, com pia, água corrente, sabão líquido e lixeira, em boas condições de limpeza', crit:'media',
+          motivo:'Condição básica de higiene para funcionários e, quando aplicável, para o público.',
+          correcao:'Providenciar reparo/reposição dos itens faltantes e reforçar a rotina de limpeza.',
+          normas:['rdc44_2009'] },
+        { id:'ef5', texto:'Local para guarda de pertences dos funcionários, separado da área de vendas', crit:'baixa',
+          motivo:'Evita contaminação cruzada entre objetos pessoais e produtos comercializados.',
+          correcao:'Disponibilizar armário ou espaço reservado fora da área de vendas.',
+          normas:['rdc44_2009'] },
+        { id:'ef6', texto:'Materiais de limpeza de uso regularizados na Anvisa e armazenados em local designado', crit:'media',
+          motivo:'Produtos de limpeza não regularizados podem ter qualidade e segurança não avaliadas pela vigilância sanitária.',
+          correcao:'Substituir por produtos regularizados e organizar local específico de armazenamento.',
+          normas:['rdc44_2009'] },
+        { id:'ef7', texto:'Equipamentos de combate a incêndio (extintores) dentro da validade e em locais de fácil acesso', crit:'alta',
+          motivo:'Extintores vencidos ou de difícil acesso comprometem a resposta em caso de princípio de incêndio.',
+          correcao:'Recarregar/substituir imediatamente e verificar exigências específicas do corpo de bombeiros local.',
+          normas:['rdc44_2009'] },
+        { id:'ef8', texto:'Programa de controle de pragas e vetores atualizado, incluindo limpeza de caixa d\u2019água', crit:'media',
+          motivo:'Previne contaminação de produtos e do abastecimento de água por pragas e vetores.',
+          correcao:'Contratar/renovar o serviço de controle de pragas e programar a limpeza periódica da caixa d\u2019água.',
+          normas:['rdc44_2009'] }
+      ]
+    },
+    {
+      id: 'responsabilidade', nome: 'Responsabilidade Técnica e Equipe', icone: '👥', freq: 'mensal',
+      itens: [
+        { id:'rt1', texto:'Farmacêutico responsável técnico presente durante todo o horário de funcionamento', crit:'alta',
+          motivo:'A presença integral do farmacêutico é condição legal para o funcionamento da farmácia como estabelecimento de saúde.',
+          correcao:'Reorganizar a escala ou providenciar farmacêutico substituto para cobrir o horário sem RT presente.',
+          normas:['lei5991_1973','lei13021_2014','rdc44_2009'] },
+        { id:'rt2', texto:'Certidão de Regularidade Técnica (CR) atualizada e exposta em local visível', crit:'alta',
+          motivo:'A CR comprova que o farmacêutico está apto a exercer a responsabilidade técnica naquele estabelecimento.',
+          correcao:'Solicitar a emissão/atualização da CR junto ao CRF e expô-la em local visível ao público.',
+          normas:['resolucaocff700_2021','rdc44_2009'] },
+        { id:'rt3', texto:'Farmacêutico identificado com uniforme diferenciado e crachá', crit:'baixa',
+          motivo:'Facilita a identificação do farmacêutico pelo público e pela fiscalização.',
+          correcao:'Providenciar uniforme diferenciado e crachá de identificação.',
+          normas:['rdc44_2009'] },
+        { id:'rt4', texto:'Demais funcionários identificados e/ou uniformizados', crit:'baixa',
+          motivo:'Contribui para a organização do atendimento e a segurança sanitária.',
+          correcao:'Providenciar identificação/uniforme para a equipe.',
+          normas:['rdc44_2009'] },
+        { id:'rt5', texto:'Registros de capacitação periódica da equipe disponíveis', crit:'media',
+          motivo:'A capacitação continuada é exigida para manter a qualidade dos serviços e a segurança sanitária.',
+          correcao:'Programar treinamentos periódicos e manter registro documental.',
+          normas:['rdc44_2009'] },
+        { id:'rt6', texto:'Farmacêutico exerce autonomia técnico-científica e recebe/avalia as prescrições recebidas', crit:'media',
+          motivo:'A avaliação técnica da prescrição pelo farmacêutico é parte central da dispensação responsável.',
+          correcao:'Reforçar com a equipe que toda prescrição deve ser avaliada pelo farmacêutico antes da dispensação.',
+          normas:['rdc44_2009','resolucaocff724_2022'] },
+        { id:'rt7', texto:'Senhas de sistemas (SNGPC, Notivisa etc.) utilizadas são pessoais e intransferíveis', crit:'alta',
+          motivo:'O compartilhamento de senhas compromete a responsabilização individual e a segurança dos registros.',
+          correcao:'Reforçar a política de uso pessoal de senhas e trocar credenciais compartilhadas indevidamente.',
+          normas:['resolucaocff724_2022','rdc22_2014'] }
       ]
     }
   ]
@@ -1125,6 +1335,23 @@ function abrirFontesDados(){
   renderMain();
 }
 
+const RAIL_COLOR = { diario: 'var(--red-bright)', semanal: 'var(--amber)', mensal: 'var(--blue)' };
+
+function ringSVG(pct, ativo){
+  const r = 12, cx = 15, cy = 15, circ = 2 * Math.PI * r;
+  const offset = circ * (1 - pct/100);
+  const trackColor = ativo ? 'rgba(255,255,255,.25)' : 'var(--border)';
+  const fillColor = pct === 100 ? 'var(--green)' : (ativo ? '#fff' : 'var(--rail-color)');
+  return `
+    <svg class="rc-ring" width="30" height="30" viewBox="0 0 30 30">
+      <circle class="ring-track" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${trackColor}" stroke-width="3"></circle>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${fillColor}" stroke-width="3"
+        stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+        transform="rotate(-90 ${cx} ${cy})"></circle>
+      <text x="15" y="16" text-anchor="middle" dominant-baseline="middle">${pct}</text>
+    </svg>`;
+}
+
 function renderSidebar(filtro=''){
   const lista = document.getElementById('lista-categorias');
   lista.innerHTML = '';
@@ -1132,62 +1359,82 @@ function renderSidebar(filtro=''){
 
   document.getElementById('btn-fonte-dados').classList.toggle('active', categoriaAtual === 'fontes');
 
-  // Visão geral
+  // Fixados no topo: Visão Geral
+  const pinRow = document.createElement('div');
+  pinRow.className = 'pin-row';
   const dashBtn = document.createElement('button');
-  dashBtn.className = 'cat-item dash-item' + (categoriaAtual===null ? ' active' : '');
-  dashBtn.innerHTML = `<div class="cat-item-label"><span>🏠</span><span class="txt">Visão Geral</span></div>`;
+  dashBtn.className = 'pin-card' + (categoriaAtual===null ? ' active' : '');
+  dashBtn.innerHTML = `<span class="pin-ic">🏠</span><span>Visão Geral</span>`;
   dashBtn.onclick = () => { categoriaAtual = null; renderSidebar(document.getElementById('busca').value); renderMain(); };
-  lista.appendChild(dashBtn);
+  pinRow.appendChild(dashBtn);
+  lista.appendChild(pinRow);
 
   if(termo){
     const encontrados = TODOS_ITENS.filter(i => i.texto.toLowerCase().includes(termo));
+    const wrap = document.createElement('div');
+    wrap.className = 'rail-group';
+    wrap.style.setProperty('--rail-color', 'var(--text-dim)');
     const header = document.createElement('div');
-    header.className = 'cat-header';
+    header.className = 'rail-title';
     header.textContent = `Resultados (${encontrados.length})`;
-    lista.appendChild(header);
+    wrap.appendChild(header);
     if(encontrados.length === 0){
       const vazio = document.createElement('div');
       vazio.className = 'nc-empty';
       vazio.textContent = 'Nenhum item encontrado.';
-      lista.appendChild(vazio);
+      wrap.appendChild(vazio);
     }
     encontrados.forEach(i => {
+      const node = document.createElement('div');
+      node.className = 'rail-node';
       const btn = document.createElement('button');
-      btn.className = 'cat-item' + (categoriaAtual === i.catId ? ' active' : '');
-      btn.innerHTML = `<div class="cat-item-label"><span>${i.catIcone}</span><span class="txt">${i.texto}</span></div>`;
+      btn.className = 'rail-card' + (categoriaAtual === i.catId ? ' active' : '');
+      btn.innerHTML = `<span class="rc-ic">${i.catIcone}</span><span class="rc-label">${i.texto}</span>`;
       btn.onclick = () => { categoriaAtual = i.catId; renderMain(true, i.id); };
-      lista.appendChild(btn);
+      node.appendChild(btn);
+      wrap.appendChild(node);
     });
+    lista.appendChild(wrap);
     return;
   }
 
   ['diario','semanal','mensal'].forEach(freq => {
     const cats = DATA.categorias.filter(c => c.freq === freq);
     if(cats.length === 0) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'rail-group';
+    wrap.style.setProperty('--rail-color', RAIL_COLOR[freq]);
     const header = document.createElement('div');
-    header.className = 'cat-header';
+    header.className = 'rail-title';
     header.textContent = `${DATA.freqIcon[freq]} ${DATA.freqLabel[freq]}`;
-    lista.appendChild(header);
+    wrap.appendChild(header);
     cats.forEach(c => {
       const { total, marcados } = contagemCategoria(c);
+      const pct = total ? Math.round((marcados/total)*100) : 0;
+      const ativo = categoriaAtual === c.id;
+      const node = document.createElement('div');
+      node.className = 'rail-node';
       const btn = document.createElement('button');
-      btn.className = 'cat-item' + (categoriaAtual === c.id ? ' active' : '');
-      btn.innerHTML = `<div class="cat-item-label"><span>${c.icone}</span><span class="txt">${c.nome}</span></div><span class="cat-count">${marcados}/${total}</span>`;
+      btn.className = 'rail-card' + (ativo ? ' active' : '');
+      btn.innerHTML = `<span class="rc-ic">${c.icone}</span><span class="rc-label">${c.nome}</span>${ringSVG(pct, ativo)}`;
       btn.onclick = () => { categoriaAtual = c.id; renderSidebar(); renderMain(); };
-      lista.appendChild(btn);
+      node.appendChild(btn);
+      wrap.appendChild(node);
     });
+    lista.appendChild(wrap);
   });
 
-  const ncHeader = document.createElement('div');
-  ncHeader.className = 'cat-header';
-  ncHeader.textContent = '⚠️ Painel';
-  lista.appendChild(ncHeader);
+  // Fixados embaixo: Não Conformidades e Fonte de Dados fica no cabeçalho fixo (fora desta lista)
+  const pinRow2 = document.createElement('div');
+  pinRow2.className = 'pin-row';
+  pinRow2.style.marginTop = '4px';
   const ncBtn = document.createElement('button');
   const ncAbertas = contarNaoConformidadesAbertas();
-  ncBtn.className = 'cat-item nc-item' + (categoriaAtual === 'nc' ? ' active' : '');
-  ncBtn.innerHTML = `<div class="cat-item-label"><span>🚨</span><span class="txt">Não Conformidades</span></div><span class="cat-count">${ncAbertas}</span>`;
+  ncBtn.className = 'pin-card nc-pin' + (categoriaAtual === 'nc' ? ' active' : '');
+  ncBtn.innerHTML = `<span class="pin-ic">🚨</span><span>Não Conformidades</span><span class="pin-badge">${ncAbertas}</span>`;
   ncBtn.onclick = () => { categoriaAtual = 'nc'; renderSidebar(); renderMain(); };
-  lista.appendChild(ncBtn);
+  pinRow2.appendChild(ncBtn);
+  lista.appendChild(pinRow2);
 }
 
 document.getElementById('busca').addEventListener('input', e => renderSidebar(e.target.value));
@@ -1613,6 +1860,19 @@ function gerarRelatorioPDF(){
     html += `</tbody></table>`;
   }
   html += `</div>`;
+
+  html += `
+    <div class="rel-assinatura">
+      <div class="rel-assin-campo">
+        <div class="rel-assin-linha"></div>
+        <div class="rel-assin-label">Assinatura do Farmacêutico Responsável Técnico</div>
+      </div>
+      <div class="rel-assin-campo">
+        <div class="rel-assin-linha"></div>
+        <div class="rel-assin-label">Data</div>
+      </div>
+    </div>
+  `;
 
   html += `<div class="rel-footer">
     Relatório gerado automaticamente pela ferramenta de Checklist de Rotina do FarmaPrática. As datas de conferência refletem o último registro salvo no navegador utilizado; itens diários, semanais e mensais são reiniciados automaticamente ao final de cada período. Este documento é um instrumento de apoio interno e não substitui os registros oficiais exigidos pela legislação sanitária vigente nem a consulta ao texto integral e atualizado de cada norma (disponível no painel "Fonte de Dados").
