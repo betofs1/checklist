@@ -134,6 +134,25 @@
     transition: background-color .15s ease, border-color .15s ease, color .15s ease;
   }
   .btn-relatorio:hover{ background: var(--hover-tint); border-color: var(--red-bright); color: var(--red-bright); }
+  .dropdown-imprimir{ position:relative; }
+  .chevron-dd{ width:11px !important; height:11px !important; opacity:.6; }
+  .dropdown-menu{
+    display:none; position:absolute; top:calc(100% + 8px); right:0;
+    width:280px; background: var(--card); border:1px solid var(--border);
+    border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    padding:6px; z-index:20;
+  }
+  .dropdown-menu.open{ display:block; }
+  .dropdown-menu button{
+    display:flex; align-items:flex-start; gap:10px; width:100%; text-align:left;
+    background:none; border:none; padding:10px 10px; border-radius:8px;
+    cursor:pointer; color: var(--text);
+  }
+  .dropdown-menu button:hover{ background: var(--hover-tint); }
+  .dropdown-menu button .ic{ width:17px; height:17px; margin-top:2px; color: var(--red-bright); flex-shrink:0; }
+  .dropdown-menu button span{ display:flex; flex-direction:column; gap:2px; }
+  .dropdown-menu button b{ font-size:.84rem; font-weight:700; }
+  .dropdown-menu button small{ font-size:.72rem; color: var(--text-dim); font-weight:400; line-height:1.4; }
   .modo-toggle{
     display:flex; align-items:center; gap:7px; height:38px; padding: 0 14px;
     border-radius:9px; border:1px solid rgba(242,184,75,.45);
@@ -147,8 +166,10 @@
     .topbar-actions{ right:14px; }
     .btn-relatorio-txt{ display:none; }
     .btn-relatorio{ padding:0 10px; }
+    .chevron-dd{ display:none; }
     #modo-texto{ display:none; }
     .modo-toggle{ padding:0 10px; }
+    .dropdown-menu{ width: min(280px, calc(100vw - 28px)); }
   }
   .topbar-app .logo-wrap{
     grid-column:1;
@@ -749,6 +770,16 @@
   .rel-assinatura .rel-assin-label{ font-size:.72rem; color:#555; margin-top:6px; }
   .rel-footer{ margin-top:26px; padding-top:12px; border-top:1px solid #ccc; font-size:.68rem; color:#888; }
 
+  /* ---------- Checklist em branco (formulário offline) ---------- */
+  .rel-branco-campos{ display:flex; gap:30px; flex-wrap:wrap; margin: 18px 0 14px; }
+  .rel-branco-campo{ flex:1; min-width:200px; font-size:.74rem; color:#555; }
+  .rel-branco-campo span{ display:block; margin-bottom:4px; font-weight:700; }
+  .rel-branco-linha{ border-bottom:1px solid #333; height:24px; }
+  .rel-branco-instrucao{ font-size:.78rem; color:#444; line-height:1.6; margin-bottom:20px; padding:10px 12px; background:#f7f5f4; border-radius:6px; }
+  table.rel-table-branco th:first-child, table.rel-table-branco td.rel-branco-check{ text-align:center; }
+  .rel-checkbox{ width:15px; height:15px; border:1.5px solid #333; border-radius:3px; margin:0 auto; }
+  .rel-branco-norma{ margin-top:3px; font-size:.68rem; color:#888; }
+
   @media print{
     body *{ visibility:hidden; }
     #relatorio-impressao, #relatorio-impressao *{ visibility:visible; }
@@ -787,10 +818,23 @@
       <span id="modo-icone"></span>
       <span id="modo-texto"></span>
     </button>
-    <button class="btn-relatorio" onclick="gerarRelatorioPDF()" title="Gerar relatório em PDF" aria-label="Gerar relatório em PDF">
-      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg>
-      <span class="btn-relatorio-txt">Relatório PDF</span>
-    </button>
+    <div class="dropdown-imprimir" id="dropdown-imprimir">
+      <button class="btn-relatorio" id="btn-imprimir-toggle" onclick="toggleMenuImprimir()" title="Opções de impressão" aria-label="Opções de impressão">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg>
+        <span class="btn-relatorio-txt">Imprimir</span>
+        <svg class="ic chevron-dd" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="dropdown-menu" id="menu-imprimir">
+        <button onclick="gerarRelatorioPDF()">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/><path d="M2 20h20"/></svg>
+          <span><b>Relatório de Conformidade</b><small>Status atual, com datas e não conformidades</small></span>
+        </button>
+        <button onclick="imprimirChecklistBranco()">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4.5" width="14" height="17" rx="1.5"/><path d="M9 4.5V3.5A1.5 1.5 0 0 1 10.5 2h3A1.5 1.5 0 0 1 15 3.5v1"/><path d="M9 11h6"/><path d="M9 15h6"/></svg>
+          <span><b>Checklist em Branco</b><small>Para imprimir e marcar à mão, offline</small></span>
+        </button>
+      </div>
+    </div>
     <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema claro/escuro" aria-label="Alternar tema claro/escuro">
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
@@ -2109,7 +2153,21 @@ function renderFontesDados(el){
 // =====================================================================
 // RELATÓRIO PDF (via impressão do navegador)
 // =====================================================================
+// =====================================================================
+// MENU DE IMPRESSÃO (dropdown)
+// =====================================================================
+function toggleMenuImprimir(){
+  document.getElementById('menu-imprimir').classList.toggle('open');
+}
+document.addEventListener('click', (e) => {
+  const dd = document.getElementById('dropdown-imprimir');
+  if(dd && !dd.contains(e.target)){
+    document.getElementById('menu-imprimir').classList.remove('open');
+  }
+});
+
 function gerarRelatorioPDF(){
+  document.getElementById('menu-imprimir').classList.remove('open');
   const agora = new Date();
   const emitidoEm = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
 
@@ -2204,6 +2262,74 @@ function gerarRelatorioPDF(){
 
   html += `<div class="rel-footer">
     Relatório gerado automaticamente pela ferramenta de Checklist de Rotina do FarmaPrática. As datas de conferência refletem o último registro salvo no navegador utilizado; itens diários, semanais e mensais são reiniciados automaticamente ao final de cada período. Este documento é um instrumento de apoio interno e não substitui os registros oficiais exigidos pela legislação sanitária vigente nem a consulta ao texto integral e atualizado de cada norma (disponível no painel "Fonte de Dados").
+  </div>`;
+
+  document.getElementById('relatorio-impressao').innerHTML = html;
+  window.print();
+}
+
+// =====================================================================
+// CHECKLIST EM BRANCO (formulário para preencher à mão, offline)
+// =====================================================================
+function imprimirChecklistBranco(){
+  document.getElementById('menu-imprimir').classList.remove('open');
+
+  const rotuloCrit = { alta:'Alta', media:'Média', baixa:'Baixa' };
+  const estabNome = estabelecimento.nome ? estabelecimento.nome : '______________________________';
+  const estabRt = estabelecimento.rt ? estabelecimento.rt : '______________________________';
+
+  let html = `
+    <div class="rel-header">
+      <div class="rel-brand">Farma<span>Prática</span> - Checklist de Rotina (formulário para preenchimento manual)</div>
+      <div class="rel-meta">
+        Estabelecimento: <strong>${estabNome}</strong><br>
+        Farmacêutico(a) RT: <strong>${estabRt}</strong>
+      </div>
+    </div>
+
+    <div class="rel-branco-campos">
+      <div class="rel-branco-campo"><span>Data</span><div class="rel-branco-linha"></div></div>
+      <div class="rel-branco-campo"><span>Turno / Responsável pelo preenchimento</span><div class="rel-branco-linha"></div></div>
+    </div>
+
+    <p class="rel-branco-instrucao">
+      Marque <strong>X</strong> na coluna "Conforme" para os itens verificados e em ordem. Deixe em branco ou anote a ocorrência na coluna "Observações" quando houver não conformidade. Depois, repasse os resultados para o aplicativo.
+    </p>
+  `;
+
+  DATA.categorias.forEach(cat => {
+    html += `<div class="rel-cat">
+      <h3>${cat.icone} ${cat.nome}<span class="rel-freq">(${DATA.freqLabel[cat.freq]})</span></h3>
+      <table class="rel-table rel-table-branco">
+        <thead><tr><th style="width:6%">Conf.</th><th style="width:48%">Item</th><th style="width:10%">Criticidade</th><th style="width:36%">Observações</th></tr></thead>
+        <tbody>`;
+    cat.itens.forEach(item => {
+      const normasTxt = (item.normas || []).map(k => NORMAS[k] ? (NORMAS[k].tipo + ' ' + NORMAS[k].numero) : '').join('; ');
+      html += `<tr>
+        <td class="rel-branco-check"><div class="rel-checkbox"></div></td>
+        <td>${item.texto}<div class="rel-branco-norma">${normasTxt}</div></td>
+        <td class="rel-crit-${item.crit}">${rotuloCrit[item.crit]}</td>
+        <td></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+
+  html += `
+    <div class="rel-assinatura">
+      <div class="rel-assin-campo">
+        <div class="rel-assin-linha"></div>
+        <div class="rel-assin-label">Assinatura do Farmacêutico Responsável Técnico</div>
+      </div>
+      <div class="rel-assin-campo">
+        <div class="rel-assin-linha"></div>
+        <div class="rel-assin-label">Data de repasse ao aplicativo</div>
+      </div>
+    </div>
+  `;
+
+  html += `<div class="rel-footer">
+    Formulário gerado pela ferramenta de Checklist de Rotina do FarmaPrática para uso offline. Após o preenchimento, repasse os resultados para o aplicativo assim que possível — os dados marcados no papel não são sincronizados automaticamente.
   </div>`;
 
   document.getElementById('relatorio-impressao').innerHTML = html;
